@@ -4,13 +4,15 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
-    "dev": "nodemon bot.js"
+    "start": "node src/bot.js",
+    "dev": "nodemon src/bot.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "mongoose": "^5.10.7",
     "telegraf": "^3.38.0"
   },
   "devDependencies": {
