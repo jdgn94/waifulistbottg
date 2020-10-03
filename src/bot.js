@@ -40,11 +40,13 @@ bot.command('add', async ctx => {
 bot.command('protecc', async ctx => {
   const { message } = ctx;
   const response = await commands.protecc(message);
+  if (response == null) return;
+
+  ctx.reply(response, { reply_to_message_id: message.message_id });
 });
 
 bot.hashtag('mamon', ctx => {
-  ctx.reply('Veeeeeeeeeeeeeeee y que mamon xD');
-  console.log(ctx)
+  ctx.reply('Veeeeeeeeeeeeeeee y que mamon xD', { reply_to_message_id: ctx.message.reply_to_message.message_id });
 })
 
 bot.hashtag(['gay', 'marico'], ctx => {
@@ -52,12 +54,9 @@ bot.hashtag(['gay', 'marico'], ctx => {
 });
 
 bot.on(['text', 'sticker', 'image', 'audio', 'video', 'document'], async ctx => {
-  console.log(ctx.chat);
-  // console.log("aumentar el contador en la conversacion", ctx.chat, 'solo si es tipo grupo');
   if (ctx.chat.type == 'group') {
-    const chat = await Chat.findOneAndUpdate({ chatId: ctx.chat.id }, { countMessage: $inc });
-    // chat.update({ countMessage: chat.countMessage + 1 }).save();
-    console.log(chat);
+    const chat = await Chat.findOneAndUpdate({ chatId: ctx.chat.id }, { $inc: { countMessage: 1 }});
+    if (chat.countMessage >= chat.limitMessage) sendWaifu(ctx);
   }
 });
 
