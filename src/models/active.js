@@ -8,6 +8,13 @@ const activeSchema = Schema({
   chatId: { type: Schema.Types.ObjectId, ref: 'Chat' },
   attempts: { type: Number, require: true },
   waifu: { type: Schema.Types.ObjectId, ref: 'Waifu' }
+},
+{
+  timestamps:
+  {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  }
 });
 
 module.exports = mongoose.model('Active', activeSchema);

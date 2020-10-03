@@ -15,6 +15,7 @@ module.exports = async function (chatId, success, failure) {
     });
     chat.save()
     .then(response => {
+      console.log(response);
       return success('Gracias por usar este bot, 100 mensajes escritos en el grupo aparecera un personaje femenino al al que deberas adivinar su nombre, al hacerlo se agregara a tu lista... \nSin mas que decir que comience el juego');
     }).catch(error => {
       console.log("Ocurrio un error inesperado, intentalo mas tarde");
