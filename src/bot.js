@@ -161,7 +161,7 @@ bot.action('decline', ctx => trade(ctx, false))
 
 // hastags 
 bot.hashtag(['yaoiFanBoy', 'fanBoy', 'yaoi'], async ctx => {
-  ctx.replyWithSticker('CAACAgEAAxkAAIDi1-DKqj8D0CM0QzQ0W3Rkc7pBWVRAAIeAANL72IWgBwm30ZgSj0bBA', { reply_to_message_id: ctx.message.reply_to_message?.message_id });
+  ctx.replyWithSticker('CAACAgEAAxkAAIDi1-DKqj8D0CM0QzQ0W3Rkc7pBWVRAAIeAANL72IWgBwm30ZgSj0bBA', { reply_to_message_id: ctx.message.reply_to_message?.message_id })
   return await addCountInChat(ctx);
 });
 
