@@ -166,6 +166,11 @@ bot.hashtag(['yaoiFanBoy', 'fanBoy', 'yaoi'], async ctx => {
   return await addCountInChat(ctx);
 });
 
+bot.hashtag('conversationType', async ctx => {
+  console.log(ctx.message);
+  ctx.reply(`Conversacion de tipo: ${ctx.message.chat.type}`, { reply_to_message_id: ctx.message.message_id });
+});
+
 bot.hashtag('gay', async ctx => {
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
   ctx.replyWithSticker('CAACAgEAAxkBAAIDkF-DK0g2dWKYx-w716WQN6FvUM-SAAIjAANL72IWW0PmnHdw13QbBA', { reply_to_message_id: messageId });
