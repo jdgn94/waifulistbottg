@@ -161,12 +161,14 @@ bot.action('decline', ctx => trade(ctx, false))
 
 // hastags 
 bot.hashtag(['yaoiFanBoy', 'fanBoy', 'yaoi'], async ctx => {
-  // ctx.replyWithSticker('CAACAgEAAxkAAIDi1-DKqj8D0CM0QzQ0W3Rkc7pBWVRAAIeAANL72IWgBwm30ZgSj0bBA', { reply_to_message_id: ctx.message.reply_to_message?.message_id });
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker('CAACAgEAAxkAAIDi1-DKqj8D0CM0QzQ0W3Rkc7pBWVRAAIeAANL72IWgBwm30ZgSj0bBA', { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
 bot.hashtag('gay', async ctx => {
-  ctx.replyWithSticker('CAACAgEAAxkBAAIDkF-DK0g2dWKYx-w716WQN6FvUM-SAAIjAANL72IWW0PmnHdw13QbBA', { reply_to_message_id: ctx.message.reply_to_message?.message_id });
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker('CAACAgEAAxkBAAIDkF-DK0g2dWKYx-w716WQN6FvUM-SAAIjAANL72IWW0PmnHdw13QbBA', { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
@@ -177,7 +179,8 @@ bot.hashtag(['F', 'f'], async ctx => {
     'CAACAgEAAxkBAAIDlV-DLrLI_tViej4v3T5tELpzpCbRAAIYAANL72IWPu400BTw6pQbBA'
   ];
 
-  ctx.replyWithSticker(await randomSticker(stickers, 2), { reply_to_message_id: ctx.message.reply_to_message?.message_id });
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker(await randomSticker(stickers, 2), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
@@ -187,7 +190,9 @@ bot.hashtag(['police', 'policia'], async ctx => {
     'CAACAgEAAxkBAAIDn1-DMyPGY9SGXUNMhRccrmw86omzAAIaAANL72IWnOdxaTIgp7kbBA'
   ];
 
-  ctx.replyWithSticker(await randomSticker(stickers, 1), { reply_to_message_id: ctx.message.reply_to_message?.message.id });
+  
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker(await randomSticker(stickers, 1), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
@@ -197,7 +202,8 @@ bot.hashtag(['llamarPolicia', 'callPolice'], async ctx => {
     'CAACAgEAAxkBAAIDnl-DMuvfEDFHBLEz81LMOS__ZG7oAAIVAANL72IWjyX83syGtkQbBA'
   ];
 
-  ctx.replyWithSticker(await randomSticker(stickers, 1), { reply_to_message_id: ctx.message.reply_to_message?.message.id });
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker(await randomSticker(stickers, 1), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
@@ -208,7 +214,8 @@ bot.hashtag(['sangradoNasal', 'sangre'], async ctx => {
     'CAACAgEAAxkBAAIDoF-DM_dTDSdsx7uo-sjbmQepPIT9AAIbAANL72IW93D7-bIcP8YbBA'
   ];
 
-  ctx.replyWithSticker(await randomSticker(stickers, 2), { reply_to_message_id: ctx.message.reply_to_message?.message.id });
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker(await randomSticker(stickers, 2), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 })
 
@@ -220,7 +227,8 @@ bot.hashtag(['trap', 'isATrap'], async ctx => {
     'CAACAgEAAxkBAAIDo1-DNGyhbTwZ_2Z_HKHf-Ofnt3Q4AAIfAANL72IW8FV2JeUM-RUbBA'
   ];
 
-  ctx.replyWithSticker(await randomSticker(stickers, 3), { reply_to_message_id: ctx.message.reply_to_message?.message.id });
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker(await randomSticker(stickers, 3), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 })
 
