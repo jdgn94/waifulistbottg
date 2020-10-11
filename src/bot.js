@@ -89,8 +89,6 @@ bot.command('tradewaifu', async ctx => {
   if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const text = message.text.split(' ');
-  console.log(text);
-  console.log(message);
 
   const myWaifuNumber = parseInt(text[1]);
   const otherWaifuNumber = parseInt(text[2]);
@@ -109,7 +107,6 @@ bot.command('tradewaifu', async ctx => {
       otherUserId: message.reply_to_message.from.id
     }
     const { status, data } = await axios.put('/waifu_list/trade_proposition', body);
-    console.log(status, data);
     switch(status) {
       case 200: 
         const extra = Telegraf.Extra
@@ -118,7 +115,6 @@ bot.command('tradewaifu', async ctx => {
           m.callbackButton('Rechazar cambio', 'decline')
         ]))
         const messageSend = await ctx.reply(`@${message.reply_to_message.from.username}. El usuario @${message.from.username} quiere intercambiar contigo a su ${data.myWaifu.name} de ${data.myWaifu.franchise} por tu ${data.otherWaifu.name} de ${data.otherWaifu.franchise}\nEstado del mensaje: pendiente`, extra); 
-        console.log(messageSend);
         await axios.put('/waifu_list/update_trade', { messageId: messageSend.message_id, tradeId: data.tradeId });
         break;
     }
@@ -131,11 +127,10 @@ bot.command('top', async ctx => {
   if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const { status, data } = await axios.get(`/chats/top?chatId=${message.chat.id}`);
-  console.log(status, data);
   switch(status) {
     case 200: await formatedUsers(ctx, data.users); break;
     case 201: ctx.reply('Parece que nadie tiene una waifu su lista', { reply_to_message_id: message.message_id }); break;
-    default: console.log("ocurrio un errir"); break;
+    default: console.error("ocurrio un errir"); break;
   }
   return await addCountInChat(ctx);
 });
@@ -167,7 +162,6 @@ bot.hashtag(['yaoiFanBoy', 'fanBoy', 'yaoi'], async ctx => {
 });
 
 bot.hashtag('conversationType', async ctx => {
-  console.log(ctx.message);
   ctx.reply(`Conversacion de tipo: ${ctx.message.chat.type}`, { reply_to_message_id: ctx.message.message_id });
 });
 
@@ -242,7 +236,6 @@ bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar mo
   const { message } = ctx
   function throwCoin() {
     const number = Math.round(Math.random() * (0 - 1) + 1);
-    console.log(number);
     if (number == 1) return 'cara';
     else return 'cruz'
   }
@@ -272,8 +265,6 @@ bot.on('message', async ctx => {
 
 // functions 
 async function addCountInChat(ctx) {
-  console.log("mandaron algo");
-  console.log(ctx.message);
   const response = await axios.get(`/chats/${ctx.chat.id}`);
   if (response.status == 200) await sendWaifu(ctx);
   return;
@@ -378,7 +369,6 @@ async function formatedUsers(ctx, users) { // formatea a los usuarios para el en
   await users.forEach(async (user, index) => {
     await usersFormated.push(`${medalPosition(index + 1)}.- ${user.nickname} (${user.quantity}).`);
   });
-  console.log(usersFormated);
 
   return ctx.reply(`Estas son las posiciones de los 10 mejores\n\n${usersFormated.join('\n')}`, { reply_to_message_id: ctx.message.message_id });
 }
@@ -391,10 +381,7 @@ async function trade(ctx, action) { // funcion para aprobar o crechazar el inter
     answer: action
   };
   const { data, status } = await axios.put('/waifu_list/trade_answer', body);
-  console.log(data, status);
-  // console.log(message.text);
   const text = message.text.split(' pendiente');
-  console.log(text);
   switch(status) {
     case 200:  
       ctx.editMessageText(`${text[0]} aceptada ✅`);
