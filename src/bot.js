@@ -8,7 +8,7 @@ const bot = new Telegraf(process.env.TOKEN_TG);  // poner el tocken en una varia
 // Init
 bot.start(async ctx => { // hace la llamada para agregar el chat a la bd
   const { chat } = ctx;
-  if (chat.type == 'group') {
+  if (chat.type == 'group' || chat.type == 'supergroup') {
     const response = await axios.post('/chats/add_chat', { chatId: chat.id }); 
     const { status, data } = response;
 
@@ -31,12 +31,12 @@ bot.start(async ctx => { // hace la llamada para agregar el chat a la bd
 
 // comands
 bot.command('span', async ctx => { // lanza una waifu para hacer pruebas
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   await sendWaifu(ctx);
 });
 
 bot.command('protecc', async ctx => { // guarda a una waifu que este activa en el grupo
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const response = await axios.post('/waifus/protecc', { message });
   if (response.status == 200) {
@@ -46,7 +46,7 @@ bot.command('protecc', async ctx => { // guarda a una waifu que este activa en e
 });
 
 bot.command('list', async ctx => { // envia el listado de waifus que tengal el usuari que envio el correo
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const { text, extras } = await searchList(message.from.id, message.chat.id, message.message_id);
 
@@ -55,7 +55,7 @@ bot.command('list', async ctx => { // envia el listado de waifus que tengal el u
 });
 
 bot.command('addfavorite', async ctx => {
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const text = message.text.split(' ');
   const waifu = text[1];
@@ -86,7 +86,7 @@ bot.command('favoritelist', async ctx => {
 });
 
 bot.command('tradewaifu', async ctx => {
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const text = message.text.split(' ');
   console.log(text);
@@ -125,10 +125,10 @@ bot.command('tradewaifu', async ctx => {
   }
 
   return await addCountInChat(ctx)
-}); // TODO: realizar la logica de esto en el bot y en el api
+}); 
 
 bot.command('top', async ctx => {
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const { status, data } = await axios.get(`/chats/top?chatId=${message.chat.id}`);
   console.log(status, data);
@@ -141,7 +141,7 @@ bot.command('top', async ctx => {
 });
 
 bot.command('changetime', async ctx => { // cambia el limite de mensajes necesatios para hacer aparecer a las waifus
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const text = message.text.split(' ');
   const quantity = parseInt(text[1]);
@@ -251,14 +251,14 @@ bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar mo
 });
 
 bot.hears(['mamon', 'Mamon'], async ctx => {
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
   ctx.reply('Veeeeeeeeeeeeeeee y que mamon xD', { reply_to_message_id: messageId});
   return await addCountInChat(ctx);
 })
 
 bot.hears(['gay', 'marico', 'maricon', 'pato', 'homosexsual', 'Gay', 'Marico', 'Maricon', 'Pato', 'Homosexsual'], ctx => {
-  if (ctx.chat.type !== 'group') return;
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   ctx.reply('Secundo la noción de esta agradable persona', { reply_to_message_id: ctx.message.message_id });
   return addCountInChat(ctx);
 }); 
@@ -266,7 +266,7 @@ bot.hears(['gay', 'marico', 'maricon', 'pato', 'homosexsual', 'Gay', 'Marico', '
 // on 
 // ['text', 'sticker', 'image', 'audio', 'video', 'document']
 bot.on('message', async ctx => {
-  if (ctx.chat.type == 'group') await addCountInChat(ctx);
+  if (ctx.chat.type == 'group' || ctx.chat.type == 'supergroup') await addCountInChat(ctx);
   return;
 });
 
