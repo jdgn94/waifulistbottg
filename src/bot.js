@@ -247,13 +247,14 @@ bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar mo
 
 bot.hears('mamon', async ctx => {
   if (ctx.chat.type !== 'group') return;
-  ctx.reply('Veeeeeeeeeeeeeeee y que mamon xD', { reply_to_message_id: ctx.message.reply_to_message?.message_id });
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.reply('Veeeeeeeeeeeeeeee y que mamon xD', { reply_to_message_id: messageId});
   return await addCountInChat(ctx);
 })
 
 bot.hears(['gay', 'marico', 'maricon', 'pato', 'homosexsual'], ctx => {
   if (ctx.chat.type !== 'group') return;
-  ctx.reply('Secundo la noción de esta agradable persona', { reply_to_message_id: ctx.message?.message_id });
+  ctx.reply('Secundo la noción de esta agradable persona', { reply_to_message_id: ctx.message.message_id });
   return addCountInChat(ctx);
 }); 
 
