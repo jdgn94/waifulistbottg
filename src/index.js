@@ -1,5 +1,10 @@
+if (process.env.NODE_ENV == 'development') require('dotenv').config();
 const express = require("express");
 const bot = require("./bot");
+
+const TOKEN_TG = process.env.TOKEN_TG;
+const HEROKU_BASE_URL = process.env.HEROKU_BASE_URL;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
@@ -14,10 +19,12 @@ app.post("/", (req, res) => {
   res.send();
 });
 
-const PORT = process.env.PORT || 5000;
 app.listen(PORT);
 
 console.log("listen on port", PORT);
 
-bot.telegram.setWebhook(`${process.env.HEROKU_BASE_URL}/bot${process.env.TOKEN_TG}`);
-bot.startWebhook('/webhook', null, PORT);
+bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${TOKEN_TG}`);
+bot.startWebhook(`/bot${API_TOKEN}`, null, PORT);
+
+// launch
+bot.launch();

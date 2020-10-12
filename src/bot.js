@@ -1,4 +1,3 @@
-if (process.env.NODE_ENV == 'development') require('dotenv').config();
 const Telegraf = require('telegraf');
 const axios = require('./config/axios');
 
@@ -412,6 +411,4 @@ function medalPosition(position) {
   }
 }
 
-// launch
-bot.launch();
 module.exports = bot;
