@@ -5,6 +5,8 @@ const axios = require('./config/axios');
 const bot = new Telegraf(process.env.TOKEN_TG);  // poner el tocken en una variable de entorno
 // const telegram = new Telegram(process.env.TOKEN_TG)
 
+bot.startPolling();
+
 // Init
 bot.start(async ctx => { // hace la llamada para agregar el chat a la bd
   const { chat } = ctx;
