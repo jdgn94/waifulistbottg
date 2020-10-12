@@ -1,5 +1,4 @@
 const express = require("express");
-const serveStatic = require("serve-static");
 const bot = require("./bot");
 
 const app = express();
@@ -15,8 +14,10 @@ app.post("/", (req, res) => {
   res.send();
 });
 
-const port = process.env.PORT || 5000;
-app.listen(port);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT);
 
-console.log("listen on port", port);
-bot.launch();
+console.log("listen on port", PORT);
+
+bot.telegram.setWebhook(`${process.env.HEROKU_BASE_URL}/bot${process.env.TOKEN_TG}`);
+bot.startWebhook('/webhook', null, PORT);

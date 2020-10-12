@@ -413,4 +413,5 @@ function medalPosition(position) {
 }
 
 // launch
+bot.launch();
 module.exports = bot;
