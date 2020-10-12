@@ -24,7 +24,7 @@ app.listen(PORT);
 console.log("listen on port", PORT);
 
 bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${TOKEN_TG}`);
-bot.startWebhook(`/bot${API_TOKEN}`, null, PORT);
+bot.startWebhook(`/bot${TOKEN_TG}`, null, PORT);
 
 // launch
 bot.launch();
