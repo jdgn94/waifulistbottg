@@ -4,7 +4,7 @@ const bot = require("./bot");
 
 const TOKEN_TG = process.env.TOKEN_TG;
 const HEROKU_BASE_URL = process.env.HEROKU_BASE_URL;
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -19,12 +19,12 @@ app.post("/", (req, res) => {
   res.send();
 });
 
-app.listen(PORT);
+// app.listen(PORT);
 
-console.log("listen on port", PORT);
+// console.log("listen on port", PORT);
 
 bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${TOKEN_TG}`);
-bot.startWebhook(`/bot${TOKEN_TG}`, null, PORT);
+bot.startWebhook('/webhook', null, PORT);
 
 // launch
 bot.launch();
