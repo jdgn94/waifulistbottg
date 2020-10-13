@@ -21,7 +21,7 @@ app.get(PATH_BOT, (req, res) => {
 // bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${TOKEN_TG}`);
 // bot.startWebhook('/webhook', null, PORT);
 
-expressApp.use(bot.webhookCallback(PATH_BOT));
+app.use(bot.webhookCallback(PATH_BOT));
 bot.telegram.setWebhook(`${HEROKU_BASE_URL}${PATH_BOT}`);
 
 app.listen(PORT);
