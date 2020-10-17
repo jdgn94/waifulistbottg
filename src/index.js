@@ -15,8 +15,12 @@ app.get('/', (req, res) => {
   res.send("Hello world");
 });
 
-// bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${TOKEN_TG}`);
-// app.use(bot.webhookCallback(`/bot${TOKEN_TG}`));
+app.get(`/bot${PATH_BOT}`, (req, res) => {
+  res.send("Hello world");
+});
+
+bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${TOKEN_TG}`);
+app.use(bot.webhookCallback(`/bot${PATH_BOT}`));
 
 app.listen(PORT, () => {
   console.log('server on port:', PORT);
