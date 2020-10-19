@@ -5,6 +5,20 @@ const bot = new Telegraf(process.env.TOKEN_TG);  // poner el tocken en una varia
 // const telegram = new Telegram(process.env.TOKEN_TG)
 
 // bot.startPolling();
+if (bot.isPolling()) {
+  reinitPolling();
+} else {
+  initPolling();
+}
+
+async function initPolling() {
+  await bot.startPolling();
+}
+
+async function reinitPolling() {
+  await bot.stopPolling();
+  await initPolling();
+}
 
 // Init
 bot.start(async ctx => { // hace la llamada para agregar el chat a la bd
