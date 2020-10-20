@@ -13,16 +13,10 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send("Hello world");
-  setTimeout(() => fetch(HEROKU_BASE_URL), 1700000);
 });
 
-app.get(`/bot${PATH_BOT}`, (req, res) => {
-  res.send("Hello world");
-  setTimeout(() => fetch(`${HEROKU_BASE_URL}/bot${PATH_BOT}`), 1700000);
-});
-
-bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${TOKEN_TG}`);
-app.use(bot.webhookCallback(`/bot${PATH_BOT}`));
+// bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${TOKEN_TG}`);
+// app.use(bot.webhookCallback(`/bot${PATH_BOT}`));
 
 app.listen(PORT, () => {
   console.log('server on port:', PORT);
