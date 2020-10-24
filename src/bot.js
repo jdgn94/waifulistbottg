@@ -4,7 +4,7 @@ const axios = require('./config/axios');
 const bot = new Telegraf(process.env.TOKEN_TG);  // poner el tocken en una variable de entorno
 // const telegram = new Telegram(process.env.TOKEN_TG)
 
-// bot.startPolling();
+bot.startPolling();
 
 // Init
 bot.start(async ctx => { // hace la llamada para agregar el chat a la bd
@@ -131,7 +131,7 @@ bot.command('top', async ctx => {
   switch(status) {
     case 200: await formatedUsers(ctx, data.users); break;
     case 201: ctx.reply('Parece que nadie tiene una waifu su lista', { reply_to_message_id: message.message_id }); break;
-    default: console.error("ocurrio un errir"); break;
+    default: console.error("ocurrio un error"); break;
   }
   return await addCountInChat(ctx);
 });
@@ -156,19 +156,37 @@ bot.action('approve', ctx => trade(ctx, true));
 bot.action('decline', ctx => trade(ctx, false))
 
 // hastags 
+bot.hashtag('conversationType', async ctx => {
+  ctx.reply(`Conversacion de tipo: ${ctx.message.chat.type}`, { reply_to_message_id: ctx.message.message_id });
+});
+
 bot.hashtag(['yaoiFanBoy', 'fanBoy', 'yaoi'], async ctx => {
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
-  ctx.replyWithSticker('CAACAgEAAxkAAIDi1-DKqj8D0CM0QzQ0W3Rkc7pBWVRAAIeAANL72IWgBwm30ZgSj0bBA', { reply_to_message_id: messageId });
+  ctx.replyWithSticker('CAACAgEAAxkBAAIEGl-UO7m3p56b0TKcwQk8t3-fmqfoAAIeAANL72IWgBwm30ZgSj0bBA', { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
-bot.hashtag('conversationType', async ctx => {
-  ctx.reply(`Conversacion de tipo: ${ctx.message.chat.type}`, { reply_to_message_id: ctx.message.message_id });
+bot.hashtag(['plusUltra', 'plus'], async ctx => {
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker('CAACAgEAAxkBAAIEKF-UPg-UZYxqJ0hBRKrbRji5ijMzAAImAANL72IWfPOEKtO2BbwbBA', { reply_to_message_id: messageId });
+  return await addCountInChat(ctx);
+});
+
+bot.hashtag(['LGBT', 'lgbt'], async ctx => {
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker('CAACAgEAAxkBAAIEKV-UPilgpQparm02N-5TYZXSQKA8AAInAANL72IWiLVl-oF7edsbBA', { reply_to_message_id: messageId });
+  return await addCountInChat(ctx);
 });
 
 bot.hashtag('gay', async ctx => {
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
   ctx.replyWithSticker('CAACAgEAAxkBAAIDkF-DK0g2dWKYx-w716WQN6FvUM-SAAIjAANL72IWW0PmnHdw13QbBA', { reply_to_message_id: messageId });
+  return await addCountInChat(ctx);
+});
+
+bot.hashtag(['sape', 'cruz'], async ctx => {
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker('CAACAgEAAxkBAAIEIF-UPSUfN-vIfLz7Pq-_yBrv49zFAAIkAANL72IWz3LEORLxDAEbBA', { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
@@ -187,9 +205,10 @@ bot.hashtag(['F', 'f'], async ctx => {
 bot.hashtag(['police', 'policia'], async ctx => {
   const stickers = [
     'CAACAgEAAxkBAAIDm1-DMjp5V0HFsrGdKbccEA_RgXboAAITAANL72IWPF3ohpMX_oMbBA',
-    'CAACAgEAAxkBAAIDn1-DMyPGY9SGXUNMhRccrmw86omzAAIaAANL72IWnOdxaTIgp7kbBA'
+    'CAACAgEAAxkBAAIDn1-DMyPGY9SGXUNMhRccrmw86omzAAIaAANL72IWnOdxaTIgp7kbBA',
+    'CAACAgEAAxkBAAIEJF-UPZgZ_fAzm6XnlfNhDH_OmnpeAAIrAANL72IWcLnIvDkJz88bBA',
+    'CAACAgEAAxkBAAIEJV-UPba1SxUw2WOu-cdRqLWnyftoAAIoAANL72IWDLOD26jPWdQbBA'
   ];
-
   
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
   ctx.replyWithSticker(await randomSticker(stickers, 1), { reply_to_message_id: messageId });
@@ -200,6 +219,17 @@ bot.hashtag(['llamarPolicia', 'callPolice'], async ctx => {
   const stickers = [
     'CAACAgEAAxkBAAIDnV-DMpVgxq1H9CqI-fgOeA-S9a2iAAIUAANL72IW99r5Q6ya434bBA',
     'CAACAgEAAxkBAAIDnl-DMuvfEDFHBLEz81LMOS__ZG7oAAIVAANL72IWjyX83syGtkQbBA'
+  ];
+
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithSticker(await randomSticker(stickers, 1), { reply_to_message_id: messageId });
+  return await addCountInChat(ctx);
+});
+
+bot.hashtag(['FBI', 'fbi'], async ctx => {
+  const stickers = [
+    'CAACAgEAAxkBAAIEJl-UPdUZg-MmrjS-acVuK_OkUlgTAAIpAANL72IWi_Q1yk_i818bBA',
+    'CAACAgEAAxkBAAIEJ1-UPeCtYtBOAjNT2ETP5PK24hw7AAIqAANL72IWh4Wy26GBtUwbBA'
   ];
 
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
@@ -224,7 +254,8 @@ bot.hashtag(['trap', 'isATrap'], async ctx => {
     'CAACAgEAAxkBAAIDpl-DNHR9a_e6Wm5nbDCNrVa_rTCCAAIiAANL72IWEYqdLvsk1lcbBA',
     'CAACAgEAAxkBAAIDpV-DNHISU50VfJ943vPyXKiB7Wj7AAIhAANL72IWNBBA3cU6ycAbBA',
     'CAACAgEAAxkBAAIDpF-DNG8ltcZRAAFj2Jf_7GoVxaUZ4gACIAADS-9iFp-BKRd9tOH4GwQ',
-    'CAACAgEAAxkBAAIDo1-DNGyhbTwZ_2Z_HKHf-Ofnt3Q4AAIfAANL72IW8FV2JeUM-RUbBA'
+    'CAACAgEAAxkBAAIDo1-DNGyhbTwZ_2Z_HKHf-Ofnt3Q4AAIfAANL72IW8FV2JeUM-RUbBA',
+    'CAACAgEAAxkBAAIEI1-UPWHMnVqcZtqAYoIPUePJKrlxAAIlAANL72IWmEnYK6IXdD4bBA'
   ];
 
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
@@ -260,6 +291,7 @@ bot.hears(['gay', 'marico', 'maricon', 'pato', 'homosexsual', 'Gay', 'Marico', '
 // on 
 // ['text', 'sticker', 'image', 'audio', 'video', 'document']
 bot.on('message', async ctx => {
+  // console.log(ctx.message);
   if (ctx.chat.type == 'group' || ctx.chat.type == 'supergroup') await addCountInChat(ctx);
   return;
 });

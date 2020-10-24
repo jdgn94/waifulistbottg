@@ -9,8 +9,8 @@ const PATH_BOT = process.env.PATH_BOT || '/bot_test';
 
 const app = express();
 
-app.use(bot.webhookCallback(`/bot${PATH_BOT}`));
-bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${PATH_BOT}`);
+// app.use(bot.webhookCallback(`/bot${PATH_BOT}`));
+// bot.telegram.setWebhook(`${HEROKU_BASE_URL}/bot${PATH_BOT}`);
 
 app.get('/', (req, res) => {
   res.send("Hello world");
