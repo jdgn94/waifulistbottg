@@ -95,33 +95,35 @@ bot.command('tradewaifu', async ctx => {
   const otherWaifuNumber = parseInt(text[2]);
   if (isNaN(myWaifuNumber) || isNaN(otherWaifuNumber) || myWaifuNumber <= 0 || otherWaifuNumber <= 0) {
     ctx.reply('Lo siento, la forma del comando es la siguiente /tradewaifu <numero en tu lista> <numero en la lista de quien deseas cambiar>\nDebe ser respondiendo el mensaje de la persona con quien quieres cambiar', { reply_to_message_id: message.message_id });
-  } else if (message.reply_to_message.from.is_bot) {
-    ctx.reply('Lo siento, los bots no tienen lista', { reply_to_message_id: message.message_id });
-  } else if (message.from.id == message.reply_to_message.from) {
-    ctx.reply('No puedes intercambiar contigo mismo', { reply_to_message_id: message.message_id })
-  } else {
-    const body = {
-      myWaifuNumber,
-      otherWaifuNumber,
-      chatId: message.chat.id,
-      userId: message.from.id,
-      otherUserId: message.reply_to_message.from.id
+  } else if (message.reply_to_message){
+    if(message.reply_to_message.from.is_bot) {
+      ctx.reply('Lo siento, los bots no tienen lista', { reply_to_message_id: message.message_id });
+    } else if (message.from.id == message.reply_to_message.from) {
+      ctx.reply('No puedes intercambiar contigo mismo', { reply_to_message_id: message.message_id })
+    } else {
+      const body = {
+        myWaifuNumber,
+        otherWaifuNumber,
+        chatId: message.chat.id,
+        userId: message.from.id,
+        otherUserId: message.reply_to_message.from.id
+      }
+      const { status, data } = await axios.put('/waifu_list/trade_proposition', body);
+      switch(status) {
+        case 200: 
+          const extra = Telegraf.Extra
+          .markup(m => m.inlineKeyboard([
+            m.callbackButton('Aceptar cambio', 'approve'),
+            m.callbackButton('Rechazar cambio', 'decline')
+          ]))
+          const messageSend = await ctx.reply(`@${message.reply_to_message.from.username}. El usuario @${message.from.username} quiere intercambiar contigo a su ${data.myWaifu.name} de ${data.myWaifu.franchise} por tu ${data.otherWaifu.name} de ${data.otherWaifu.franchise}\nEstado del mensaje: pendiente`, extra); 
+          await axios.put('/waifu_list/update_trade', { messageId: messageSend.message_id, tradeId: data.tradeId });
+          break;
+      }
     }
-    const { status, data } = await axios.put('/waifu_list/trade_proposition', body);
-    switch(status) {
-      case 200: 
-        const extra = Telegraf.Extra
-        .markup(m => m.inlineKeyboard([
-          m.callbackButton('Aceptar cambio', 'approve'),
-          m.callbackButton('Rechazar cambio', 'decline')
-        ]))
-        const messageSend = await ctx.reply(`@${message.reply_to_message.from.username}. El usuario @${message.from.username} quiere intercambiar contigo a su ${data.myWaifu.name} de ${data.myWaifu.franchise} por tu ${data.otherWaifu.name} de ${data.otherWaifu.franchise}\nEstado del mensaje: pendiente`, extra); 
-        await axios.put('/waifu_list/update_trade', { messageId: messageSend.message_id, tradeId: data.tradeId });
-        break;
-    }
-  }
 
-  return await addCountInChat(ctx)
+    return await addCountInChat(ctx)
+  }
 }); 
 
 bot.command('top', async ctx => {
