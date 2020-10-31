@@ -389,8 +389,8 @@ function buttons(m, page, totalPages) { // funcion para el pintado de los botone
 async function sendAlbum(ctx, waifus) { // envia un album de fotos de la lista de favoritas
   const waifusFormated = await waifus.map(waifu => {
     return {
-      media: { url: waifu.image_url },
-      filename: waifu.public_id,
+      media: { url: waifu.fav_image_url ? waifu.fav_image_url : waifu.image_url },
+      filename: waifu._fav_public_id ? waifu.fav_public_id : waifu.public_id,
       caption: `${medalPosition(waifu.position)}.- ${waifu.name} - ${waifu.franchise}`,
       type: 'photo'
     }
