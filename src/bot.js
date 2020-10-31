@@ -390,7 +390,7 @@ async function sendAlbum(ctx, waifus) { // envia un album de fotos de la lista d
   const waifusFormated = await waifus.map(waifu => {
     return {
       media: { url: waifu.fav_image_url ? waifu.fav_image_url : waifu.image_url },
-      filename: waifu._fav_public_id ? waifu.fav_public_id : waifu.public_id,
+      filename: waifu.fav_public_id ? waifu.fav_public_id : waifu.public_id,
       caption: `${medalPosition(waifu.position)}.- ${waifu.name} - ${waifu.franchise}`,
       type: 'photo'
     }
