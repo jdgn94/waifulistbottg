@@ -4,7 +4,7 @@ const bot = require("./bot");
 
 const TOKEN_TG = process.env.TOKEN_TG;
 const HEROKU_BASE_URL = process.env.HEROKU_BASE_URL;
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 const PATH_BOT = process.env.PATH_BOT || '/bot_test';
 
 const app = express();
