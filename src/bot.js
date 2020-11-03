@@ -150,6 +150,25 @@ bot.command('changetime', async ctx => { // cambia el limite de mensajes necesat
   return await addCountInChat(ctx);
 });
 
+bot.command('active', async ctx => {
+  if (ctx.chat.type == 'group' && ctx.chat.type == 'supergroup') {
+    return await addCountInChat(ctx);
+  }
+
+  const waifus = await axios.get('/waifus/active');
+  let message = ''
+  if (waifus.length > 0) {
+    message = 'Las waifus activas son:\n';
+    await waifus.forEach(waifu => {
+      message += `Nombre: ${waifu.name}, Apodo: ${waifu.nickname}`;
+    });
+  } else {
+    message = 'No hay ninguna waifu activa en este momento';
+  }
+
+  return ctx.replay(message, { reply_to_message_id: ctx.message.message_id });
+});
+
 // actions
 bot.action('nextPage', ctx => changePage(ctx));
 bot.action('previusPage', ctx => changePage(ctx));
