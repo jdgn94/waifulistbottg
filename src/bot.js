@@ -156,11 +156,12 @@ bot.command('active', async ctx => {
   }
 
   const waifus = await axios.get('/waifus/active');
-  let message = ''
-  if (waifus.length > 0) {
+  let message = '';
+  console.log(waifus.data);
+  if (waifus.data.length > 0) {
     message = 'Las waifus activas son:\n';
-    await waifus.forEach(waifu => {
-      message += `Nombre: ${waifu.name}, Apodo: ${waifu.nickname}`;
+    await waifus.data.forEach(waifu => {
+      message += `Nombre: ${waifu.name}, Apodo: ${waifu.nickname}\n`;
     });
   } else {
     message = 'No hay ninguna waifu activa en este momento';
