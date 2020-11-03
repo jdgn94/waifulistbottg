@@ -166,7 +166,7 @@ bot.command('active', async ctx => {
     message = 'No hay ninguna waifu activa en este momento';
   }
 
-  return ctx.replay(message, { reply_to_message_id: ctx.message.message_id });
+  return ctx.reply(message, { reply_to_message_id: ctx.message.message_id });
 });
 
 // actions
