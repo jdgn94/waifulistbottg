@@ -61,7 +61,7 @@ bot.command('addfavorite', async ctx => {
   const text = message.text.split(' ');
   const waifu = text[1];
   const position = text[2];
-  if (!waifu && !position) return ctx.reply('Debes enviar el mensaje de la siguiente manera\n/addfavorite <numero de tu lista> <posición deseada>\nSolo puedes tener a 9 personajes en esta lista', { reply_to_message_id: message.message_id });
+  if (!waifu || !position) return ctx.reply('Debes enviar el mensaje de la siguiente manera\n/addfavorite <numero de tu lista> <posición deseada>\nEl maximo de personajes depende de tu nivel, el nivel que tienes actualmente lo puedes ver con /profile, cada pagina puede alvergar a 10 personajes', { reply_to_message_id: message.message_id });
 
   const body = {
     waifuNumber: waifu,
@@ -76,10 +76,10 @@ bot.command('addfavorite', async ctx => {
 
 bot.command('favoritelist', async ctx => {
   const { message } = ctx;
-  const response = await axios.get(`/waifu_list/favorites?chatId=${message.chat.id}&userId=${message.from.id}`);
+  const response = await axios.get(`/waifu_list/favorites?chatId=${message.chat.id}&userId=${message.from.id}&page=1`);
   const { status, data } = response;
   switch(status){
-    case 200: await sendAlbum(ctx, data.waifus); break;
+    case 200: await sendAlbum(ctx, data.waifus, data.totalPages); break;
     case 201: ctx.reply(data.message, { reply_to_message_id: message.message_id }); break;
     default: ctx.reply('Obtube un error, intentalo mas tarde', { reply_to_message_id: message.message_id }); break;
   }
@@ -170,6 +170,22 @@ bot.command('active', async ctx => {
   return ctx.reply(message, { reply_to_message_id: ctx.message.message_id });
 });
 
+bot.command('profile', async ctx => {
+  if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
+  const { message } = ctx;
+
+  const response = await axios.get(`/user/profile?userId=${message.from.id}&chatId=${message.chat.id}`);
+  const { data } = response;
+  if (response.status == 201) {
+    return ctx.reply('No tienes ningun perfil ya que no has optenido ninguna waifu', { reply_to_message_id: ctx.message.message_id });
+  } else if (response.status != 200) return ctx.reply('Ocurrio un error', { reply_to_message_id: ctx.message.message_id });
+
+  const text = `Perfil de @${message.from.username}.\nTotal de waifus: ${data.totalWaifus}.\nPaginas en favoritos: ${parseInt(data.profile.level / 5) + 1}.\nPuntos acumulados: ${data.profile.points}.\nExperiencia: ${data.profile.exp}/${data.profile.limit_exp}.\nNivel: ${data.profile.level}.`;
+
+  await addCountInChat(ctx);
+  return ctx.reply(text, { reply_to_message_id: ctx.message.message_id });
+});
+
 // actions
 bot.action('nextPage', ctx => changePage(ctx));
 bot.action('previusPage', ctx => changePage(ctx));
@@ -220,7 +236,7 @@ bot.hashtag(['F', 'f'], async ctx => {
   ];
 
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
-  ctx.replyWithSticker(await randomSticker(stickers, 2), { reply_to_message_id: messageId });
+  ctx.replyWithSticker(await randomSticker(stickers), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
@@ -233,7 +249,7 @@ bot.hashtag(['police', 'policia'], async ctx => {
   ];
   
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
-  ctx.replyWithSticker(await randomSticker(stickers, 1), { reply_to_message_id: messageId });
+  ctx.replyWithSticker(await randomSticker(stickers), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
@@ -255,7 +271,7 @@ bot.hashtag(['FBI', 'fbi'], async ctx => {
   ];
 
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
-  ctx.replyWithSticker(await randomSticker(stickers, 1), { reply_to_message_id: messageId });
+  ctx.replyWithSticker(await randomSticker(stickers), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 });
 
@@ -267,7 +283,7 @@ bot.hashtag(['sangradoNasal', 'sangre'], async ctx => {
   ];
 
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
-  ctx.replyWithSticker(await randomSticker(stickers, 2), { reply_to_message_id: messageId });
+  ctx.replyWithSticker(await randomSticker(stickers), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 })
 
@@ -281,9 +297,48 @@ bot.hashtag(['trap', 'isATrap'], async ctx => {
   ];
 
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
-  ctx.replyWithSticker(await randomSticker(stickers, 3), { reply_to_message_id: messageId });
+  ctx.replyWithSticker(await randomSticker(stickers), { reply_to_message_id: messageId });
   return await addCountInChat(ctx);
 })
+
+bot.hashtag(['cachetada', 'bofetada', 'bitchSlapt'], async ctx => {
+  const gifs = [
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032927/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/tenor_4_dqp3lb.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032915/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/tenor_2_qi1444.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032912/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/Gzh8yjO_fadymp.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032815/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/Whatcha_say_about_my_cooking_ea7350_5456127_dp29g2.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032788/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/Kyoukai_Senjou_no_Horizon_II_cmfthh.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032740/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/tenor_jcadre.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032711/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/tenor_3_lvqses.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032595/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/1467219358_wQz6OxI_feiwas.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032554/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/tenor_1_ahznkc.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032520/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/giphy_xrbjgb.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032512/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/d8b_mxeeol.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032491/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/slap_3_more_here_wwwyoutubecomusersquabanimeand_here_httpthesquabnestcom_ac9a14_5183773_iprxkx.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032470/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/original_zvv6nc.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032455/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/d10fbffb944f3f293258936ad24e56f15ec40220_hq_z2eduy.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032320/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/Bvou_itfmah.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032306/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/1433279248_giphy_b0k2h1.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032248/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/5m62_x2m47r.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032242/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/5c5f96ebe69eedcce529e65646c411867c05fad5_hq_bjtj7v.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032175/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/9b47c4f95b9a93563857dc98eb74a05c_bzhh1g.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032088/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/2MrF_wuisns.gif',
+    'https://res.cloudinary.com/jdgn94/image/upload/v1605032082/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/2aa996a717215d90e66c628832982fe5_cfuwyw.gif'
+  ];
+
+  const gif = await randomSticker(gifs);
+  const arrayName = gif.split('/');
+  const gifName = arrayName[arrayName.length - 1];
+
+  const messageFormated = {
+    url: gif,
+    filename: gifName,
+  };
+
+  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  ctx.replyWithAnimation(messageFormated, { reply_to_message_id: messageId });
+  return await addCountInChat(ctx);
+});
 
 // hears
 bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar moneda'], async ctx => {
@@ -406,8 +461,18 @@ function buttons(m, page, totalPages) { // funcion para el pintado de los botone
   else return [buttonPrevius, buttonNext, extraButton];
 }
 
-async function sendAlbum(ctx, waifus) { // envia un album de fotos de la lista de favoritas
-  console.log(waifus);
+function buttonsFavorites(m, page, totalPages) { // funcion para el pintado de los botones para el mensaje del listado
+  const extraButton = m.callbackButton('🔍 Detalles', 'detailsFav');
+  const buttonPrevius = m.callbackButton(`⬅️ Página ${page - 1}`, 'previusPageFav');
+  const buttonNext =  m.callbackButton(`Página ${page + 1} ➡️`, 'nextPageFav');
+  
+  if (page == 1 && totalPages < 2) return [extraButton];
+  else if (page == 1 && totalPages > 1) return [buttonNext, extraButton];
+  else if (page == totalPages && totalPages > 1) return [buttonPrevius, extraButton];
+  else return [buttonPrevius, buttonNext, extraButton];
+}
+
+async function sendAlbum(ctx, waifus, totalPages, page = 1) { // envia un album de fotos de la lista de favoritas
   const waifusFormated = await waifus.map(waifu => {
     return {
       media: { url: waifu.fav_image_url ? waifu.fav_image_url : waifu.image_url },
@@ -416,8 +481,19 @@ async function sendAlbum(ctx, waifus) { // envia un album de fotos de la lista d
       type: 'photo'
     }
   });
+  console.log(totalPages, page);
 
-  return ctx.replyWithMediaGroup(waifusFormated, { reply_to_message_id: ctx.message.message_id });
+  const messageGalery = await ctx.replyWithMediaGroup(waifusFormated, { reply_to_message_id: ctx.message.message_id });
+  console.log('datos del mensaje enviado', messageGalery);
+
+  const extras = Telegraf.Extra
+  .inReplyTo(messageGalery[0].message_id)
+  .markdown()
+  .markup((m) => m.inlineKeyboard(buttonsFavorites(m, parseInt(page), parseInt(totalPages))));
+
+  // TODO: mensaje del paginado, hacer que funcione bien para ponerlo
+  // ctx.reply(`@${ctx.message.from.username}, este es tu listado.\nPágina: 1/${totalPages}`, extras);
+  return 
 }
 
 async function formatedUsers(ctx, users) { // formatea a los usuarios para el envio de posiciones
@@ -452,7 +528,8 @@ async function trade(ctx, action) { // funcion para aprobar o crechazar el inter
   }
 }
 
-async function randomSticker(stickers, max) {
+async function randomSticker(stickers = []) {
+  const max = stickers.length - 1;
   const position = await Math.round(Math.random() * (0 - max) + max);
   return stickers[position];
 }
