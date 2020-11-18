@@ -1,7 +1,7 @@
 const utils = require('../utils');
 const axios = require('../config/axios');
 
-const start = async ctx => { // hace la llamada para agregar el chat a la bd
+async function start (ctx) { // hace la llamada para agregar el chat a la bd
   const { chat } = ctx;
   if (chat.type == 'group' || chat.type == 'supergroup') {
     const response = await axios.post('/chats/add_chat', { chatId: chat.id }); 
@@ -24,13 +24,13 @@ const start = async ctx => { // hace la llamada para agregar el chat a la bd
   }
 }
 
-const span = async ctx => {
+async function span (ctx) {
   if (!await utils.verifyGroup(ctx)) return;
 
   await utils.sendWaifu(ctx);
 };
 
-const protecc = async ctx => { // comando para proteger una waifu que salga
+async function protecc (ctx) { // comando para proteger una waifu que salga
   if (!await utils.verifyGroup(ctx)) return;
   
   const { message } = ctx;
@@ -38,7 +38,7 @@ const protecc = async ctx => { // comando para proteger una waifu que salga
   if (response.status == 200) return utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
 };
 
-const list = async ctx => { // envia el listado de waifus que tengal el usuari que envio el correo
+async function list (ctx) { // envia el listado de waifus que tengal el usuari que envio el correo
   if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const { text, extras } = await utils.searchList(message.from.id, message.chat.id, message.message_id);
@@ -46,7 +46,7 @@ const list = async ctx => { // envia el listado de waifus que tengal el usuari q
   return await utils.sendMessage(ctx, text, extras);
 };
 
-const addFavorite = async ctx => { // se agrega una waifu al listado de favoritos
+async function addFavorite (ctx) { // se agrega una waifu al listado de favoritos
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -69,7 +69,7 @@ const addFavorite = async ctx => { // se agrega una waifu al listado de favorito
   if (response.status == 200) return utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
 };
 
-const favoriteList = async ctx => {
+async function favoriteList (ctx) {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -82,7 +82,7 @@ const favoriteList = async ctx => {
   }
 }
 
-const tradeWaifu =  async ctx => {
+async function tradeWaifu (ctx) {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -115,7 +115,7 @@ const tradeWaifu =  async ctx => {
   }
 }; 
 
-const top = async ctx => {
+async function top (ctx) {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -127,7 +127,7 @@ const top = async ctx => {
   }
 };
 
-const changeTime = async ctx => {
+async function changeTime (ctx) {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -141,7 +141,7 @@ const changeTime = async ctx => {
   if (status == 200) return utils.sendMessage('Se actualizo el limite para la aprarición de waifus', { reply_to_message_id: message.message_id });
 }
 
-const profile = async ctx => {
+async function profile (ctx) {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -156,7 +156,7 @@ const profile = async ctx => {
   return utils.sendMessage(ctx, text, { reply_to_message_id: ctx.message.message_id });
 }
 
-const active = async ctx => {
+async function active (ctx) {
   if (await utils.verifyGroup(ctx)) return await utils.addCountInChat(ctx);
 
   const waifus = await axios.get('/waifus/active');

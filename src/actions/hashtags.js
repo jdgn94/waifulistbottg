@@ -1,36 +1,36 @@
 const { sendSticker, sendAnimationLink } = require('../utils');
 
-const yaoi = async ctx => {
+async function yaoi (ctx) {
   const stickers = ['CAACAgEAAxkBAAIEGl-UO7m3p56b0TKcwQk8t3-fmqfoAAIeAANL72IWgBwm30ZgSj0bBA'];
 
   return sendSticker(ctx, stickers);
 };
 
-const plus = async ctx => {
+async function plus (ctx) {
   const stickers = ['CAACAgEAAxkBAAIEKF-UPg-UZYxqJ0hBRKrbRji5ijMzAAImAANL72IWfPOEKtO2BbwbBA'];
 
   return sendSticker(ctx, stickers);
 };
 
-const lgbt = async ctx => {
+async function lgbt (ctx) {
   const stickers = ['CAACAgEAAxkBAAIEKV-UPilgpQparm02N-5TYZXSQKA8AAInAANL72IWiLVl-oF7edsbBA'];
 
   return sendSticker(ctx, stickers);
 };
 
-const gay = async ctx => {
+async function gay (ctx) {
   const stickers = ['CAACAgEAAxkBAAIDkF-DK0g2dWKYx-w716WQN6FvUM-SAAIjAANL72IWW0PmnHdw13QbBA'];
 
   return sendSticker(ctx, stickers);
 };
 
-const cross = async ctx => {
+async function cross (ctx) {
   const stickers = ['CAACAgEAAxkBAAIEIF-UPSUfN-vIfLz7Pq-_yBrv49zFAAIkAANL72IWz3LEORLxDAEbBA'];
 
   return sendSticker(ctx, stickers);
 };
 
-const respect = async ctx => {
+async function respect (ctx) {
   const stickers = [
     'CAACAgEAAxkBAAIDk1-DLINsDisUJqimmKLe0zufzyhIAAIWAANL72IW8l1GQ8Z5SBgbBA',
     'CAACAgEAAxkBAAIDlF-DLMV_L22Vq_juo1qPP4JxKEQnAAIXAANL72IWNRr8dz1iQxwbBA',
@@ -40,7 +40,7 @@ const respect = async ctx => {
   return sendSticker(ctx, stickers);
 };
 
-const police = async ctx => {
+async function police (ctx) {
   const stickers = [
     'CAACAgEAAxkBAAIDm1-DMjp5V0HFsrGdKbccEA_RgXboAAITAANL72IWPF3ohpMX_oMbBA',
     'CAACAgEAAxkBAAIDn1-DMyPGY9SGXUNMhRccrmw86omzAAIaAANL72IWnOdxaTIgp7kbBA',
@@ -51,7 +51,7 @@ const police = async ctx => {
   return sendSticker(ctx, stickers);
 };
 
-const callPolice = async ctx => {
+async function callPolice (ctx) {
   const stickers = [
     'CAACAgEAAxkBAAIDnV-DMpVgxq1H9CqI-fgOeA-S9a2iAAIUAANL72IW99r5Q6ya434bBA',
     'CAACAgEAAxkBAAIDnl-DMuvfEDFHBLEz81LMOS__ZG7oAAIVAANL72IWjyX83syGtkQbBA'
@@ -60,7 +60,7 @@ const callPolice = async ctx => {
   return sendSticker(ctx, stickers);
 };
 
-const fbi = async ctx => {
+async function fbi (ctx) {
   const stickers = [
     'CAACAgEAAxkBAAIEJl-UPdUZg-MmrjS-acVuK_OkUlgTAAIpAANL72IWi_Q1yk_i818bBA',
     'CAACAgEAAxkBAAIEJ1-UPeCtYtBOAjNT2ETP5PK24hw7AAIqAANL72IWh4Wy26GBtUwbBA'
@@ -69,7 +69,7 @@ const fbi = async ctx => {
   return sendSticker(ctx, stickers);
 };
 
-const blood = async ctx => {
+async function blood (ctx) {
   const stickers = [
     'CAACAgEAAxkBAAIDol-DM_0YmHe_cdmG-jq_DmPTIMijAAIdAANL72IW7LfNiAxbyV0bBA',
     'CAACAgEAAxkBAAIDoV-DM_tZCHQSGi7FlTQIVjZ3DDZIAAIcAANL72IWJi_8KGo0aL4bBA',
@@ -79,7 +79,7 @@ const blood = async ctx => {
   return sendSticker(ctx, stickers);
 };
 
-const trap = async ctx => {
+async function trap (ctx) {
   const stickers = [
     'CAACAgEAAxkBAAIDpl-DNHR9a_e6Wm5nbDCNrVa_rTCCAAIiAANL72IWEYqdLvsk1lcbBA',
     'CAACAgEAAxkBAAIDpV-DNHISU50VfJ943vPyXKiB7Wj7AAIhAANL72IWNBBA3cU6ycAbBA',
@@ -91,7 +91,7 @@ const trap = async ctx => {
   return sendSticker(ctx, stickers);
 }
 
-const bitchSlap = async ctx => {
+async function bitchSlap (ctx) {
   const gifs = [
     'https://res.cloudinary.com/jdgn94/image/upload/v1605032927/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/tenor_4_dqp3lb.gif',
     'https://res.cloudinary.com/jdgn94/image/upload/v1605032915/Waifu%20List%20Bot%20Telegram%20Gif/Cachetada/tenor_2_qi1444.gif',
