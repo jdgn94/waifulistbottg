@@ -67,27 +67,6 @@ const formatedUsers = async (ctx, users) => { // formatea a los usuarios para el
   return await sendMessage(ctx, text, extra);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // INFO: acciones
 const changePage = async (ctx) => { // funcion para cambiar la pagina en el mensaje del listado de waifus
   const { data, message, from } = ctx.update.callback_query;

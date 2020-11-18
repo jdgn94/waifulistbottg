@@ -1,5 +1,4 @@
 const Telegraf = require('telegraf');
-const axios = require('./config/axios');
 const Commands = require('./actions/commands');
 const Hashtags = require('./actions/hashtags');
 const Hears = require('./actions/hears');
