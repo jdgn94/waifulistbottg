@@ -191,7 +191,7 @@ const sendAnimationLink = async (ctx, links = []) => {
   const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
   const url = await selectRandom(links);
 
-  const arrayName = gif.split('/');
+  const arrayName = url.split('/');
   const filename = arrayName[arrayName.length - 1];
 
   const messageFormated = {
