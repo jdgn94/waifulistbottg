@@ -184,7 +184,6 @@ const addCountInChat = async ctx => {
   if (!await verifyGroup(ctx)) return;
 
   const response = await axios.get(`/chats/${ctx.chat.id}`);
-  console.log(response.status);
   if (response.status == 200) await sendWaifu(ctx);
   return;
 }
@@ -238,13 +237,13 @@ const sendAlbum = async (ctx, waifus, totalPages, page = 1) => { // envia un alb
 
   const messageGalery = await ctx.replyWithMediaGroup(waifusFormated, { reply_to_message_id: ctx.message.message_id });
   console.log('datos del mensaje enviado', messageGalery);
-
-  const extras = Telegraf.Extra
-  .inReplyTo(messageGalery[0].message_id)
-  .markdown()
-  .markup((m) => m.inlineKeyboard(buttonsFavorites(m, parseInt(page), parseInt(totalPages))));
-
+  
   // TODO: mensaje del paginado, hacer que funcione bien para ponerlo
+  // const extras = Telegraf.Extra
+  // .inReplyTo(messageGalery[0].message_id)
+  // .markdown()
+  // .markup((m) => m.inlineKeyboard(buttonsFavorites(m, parseInt(page), parseInt(totalPages))));
+
   // ctx.reply(`@${ctx.message.from.username}, este es tu listado.\nPágina: 1/${totalPages}`, extras);
   return;
 };

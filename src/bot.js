@@ -2,6 +2,7 @@ const Telegraf = require('telegraf');
 const axios = require('./config/axios');
 const Commands = require('./actions/commands');
 const Hashtags = require('./actions/hashtags');
+const Hears = require('./actions/hears');
 const utils = require('./utils');
 
 const bot = new Telegraf(process.env.TOKEN_TG);  // poner el tocken en una variable de entorno
@@ -65,17 +66,17 @@ bot.hashtag(['trap', 'isATrap'], async ctx => await Hashtags.trap(ctx))
 bot.hashtag(['cachetada', 'bofetada', 'bitchSlapt'], async ctx => await Hashtags.bitchSlap(ctx));
 
 // hears
-bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar moneda'], async ctx => await utils.coing(ctx));
+bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar moneda'], async ctx => await Hears.coing(ctx));
 
-bot.hears(['mamon', 'Mamon'], async ctx => await utils.mamon(ctx))
+bot.hears(['mamon', 'Mamon'], async ctx => await Hears.mamon(ctx))
 
-bot.hears(['gay', 'marico', 'maricon', 'amarico', 'homosexsual', 'Gay', 'Marico', 'Maricon', 'Amarico', 'Homosexsual'], async ctx => await utils.toInsult(ctx)); 
+bot.hears(['gay', 'marico', 'maricon', 'amarico', 'homosexsual', 'Gay', 'Marico', 'Maricon', 'Amarico', 'Homosexsual'], async ctx => await Hears.toInsult(ctx)); 
 
 // on 
 // ['text', 'sticker', 'image', 'audio', 'video', 'document']
 bot.on('message', async ctx => {
   // console.log(ctx.message);
-  if (utils.verifyGroup(ctx)) await utils.addCountInChat(ctx);
+  if (await utils.verifyGroup(ctx)) await utils.addCountInChat(ctx);
   return;
 });
 

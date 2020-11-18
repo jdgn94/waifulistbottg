@@ -24,7 +24,7 @@ const toInsult = async ctx => {
   return utils.sendMessage(ctx, 'Secundo la noción de esta agradable persona', { reply_to_message_id: ctx.message.message_id });
 }
 
-module.expots = {
+module.exports = {
   coing,
   mamon,
   toInsult
