@@ -108,7 +108,7 @@ async function tradeWaifu (ctx) {
         otherUserId: message.reply_to_message.from.id
       }
       const { status, data } = await axios.put('/waifu_list/trade_proposition', body);
-      if (status = 200) {
+      if (status == 200) {
         await utils.buttonsToTrade(ctx);
       } else return;
     }
