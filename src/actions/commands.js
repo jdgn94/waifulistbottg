@@ -109,7 +109,7 @@ async function tradeWaifu (ctx) {
       }
       const { status, data } = await axios.put('/waifu_list/trade_proposition', body);
       if (status == 200) {
-        await utils.buttonsToTrade(ctx);
+        await utils.buttonsToTrade(ctx, data);
       } else return;
     }
   }

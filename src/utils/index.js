@@ -117,7 +117,7 @@ const trade = async (ctx, action)  => { // funcion para aprobar o crechazar el i
 
 
 // INFO: botones
-const buttonsToTrade = async ctx => { // botones para el intercambio de waifus
+const buttonsToTrade = async (ctx, data) => { // botones para el intercambio de waifus
   const extra = Telegraf.Extra
   .markup(m => m.inlineKeyboard([
     m.callbackButton('Aceptar cambio', 'approve'),
