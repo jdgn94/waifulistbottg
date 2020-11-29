@@ -107,6 +107,7 @@ const favoriteList = async ctx => {
 
   const { message } = ctx;
   const page = isNaN(parseInt(message.text.split(' ')[1])) ? 1 : message.text.split(' ')[1];
+  // return console.log(page);
   const { status, data } = await axios.get(`/waifu_list/favorites?chatId=${message.chat.id}&userId=${message.from.id}&page=${page}`);
   switch(status){
     case 200: return await utils.sendAlbum(ctx, data.waifus, data.totalPages, page);

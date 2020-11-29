@@ -262,7 +262,7 @@ const sendAnimationLink = async (ctx, links = []) => {
 
 const sendAlbum = async (ctx, waifus, totalPages, page = 1, usernameTemp = '') => { // envia un album de fotos de la lista de favoritas
   const formated = await waifusFormated(waifus);
-  const messageId = ctx.message ? ctx.message.reply_to_message.message_id : null;
+  const messageId = ctx.message ? ctx.message.message_id : null;
 
   const messageGalery = await ctx.replyWithMediaGroup(formated, { reply_to_message_id: messageId });
   console.log('datos del mensaje enviado', messageGalery);
