@@ -9,10 +9,28 @@ const config = {
 
 const _axios = axios.create(config);
 
-const get = async url => await _axios.get(url);
+const get = async url => {
+  const response = await _axios.get(url)
+  .then(response => response)
+  .catch(error => error.response);
+  
+  return response;
+}
 
-const post = async (url, body) => await _axios.post(url, body);
+const post = async (url, body) => {
+  const response = await _axios.post(url, body)
+  .then(response => response)
+  .catch(error => error.response);
+  
+  return response;
+}
 
-const put = async (url, body) => await _axios.put(url, body);
+const put = async (url, body) => {
+  const response = await _axios.put(url, body)
+  .then(response => response)
+  .catch(error => error.response);
+  
+  return response;
+}
 
 module.exports = { get, post, put };

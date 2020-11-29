@@ -1,7 +1,7 @@
 const utils = require('../utils');
 const axios = require('../config/axios');
 
-async function start (ctx) { // hace la llamada para agregar el chat a la bd
+const start = async ctx => { // hace la llamada para agregar el chat a la bd
   const { chat } = ctx;
   if (chat.type == 'group' || chat.type == 'supergroup') {
     const response = await axios.post('/chats/add_chat', { chatId: chat.id }); 
@@ -24,13 +24,46 @@ async function start (ctx) { // hace la llamada para agregar el chat a la bd
   }
 }
 
-async function span (ctx) {
+const span = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
 
   await utils.sendWaifu(ctx);
 };
 
-async function protecc (ctx) { // comando para proteger una waifu que salga
+const help = async ctx => {
+  const message = `
+Lista de los comando.
+- /start se usa para inicir el bot, solo funciona 1 vez y debe ser usado en un grupo para que empieze a funcionar.
+- /protecc se usa para agregar a la waifu que haya aparecido, debe ser usado con el nombre del personaje. Solo se la queda el que hacierte primero.
+- /list muesta el listado de todas las waifus que tienes en tu lista
+- /addFavorite agraga una waifu de tu lista a la favoritos, de ser usado con 2 números, el primero indica la posición en /list, el segundo la posición que le quieres agregar en el listado de favoritos.
+- /favoriteList muestra el listado de favoritos con las images de los personajes, la cantidad de páginas depende del nivel que tenga el usuario.
+- /tradeWaifu se usa para intercambiar waifus entre 2 usuarios del grupo, se usa de la siguiente forma, el primer número es la posición de tu en /list y el segundo número es la posición en /list del usuario con quien quieres intercambiar, el intercambio se hace contestando a un mensaje del usuario con quien quieres intercambiar.
+- /top muestra la posición de los usuarios en orden de quien tenga mas waifus.
+- /changeTime cambia la cantidad de mensajes necesarios para que puedan aparecen waifus (50 - 1000)-
+- /profile muestra el perfíl de la persona que lo pidio.
+
+Lista de hashtags, estos envian un sticker o un gif.
+- yaoiFanBoy, fanBoy o yaoi.
+- plusUltra o plus manada un sticker con tematica gay.
+- LGBT o lgbt.
+- gay.
+- sape, cruz o cross.
+- F o f.
+- police o policia.
+- llamarPolicia o callPolice.
+- FBI o fbi.
+- sangradoNasal, sangre, sangrado o blood.
+- trap, isATrap o trapo.
+- licencia o licence.
+- chao, bye, byeBye o correr.
+- clorox, cloro, chlorine.
+- cachetada, bofetada o bitchSlapt. (gif)`;
+
+  return utils.sendMessage(ctx, message, { reply_to_message_id: ctx.message.message_id });
+}
+
+const protecc = async ctx => { // comando para proteger una waifu que salga
   if (!await utils.verifyGroup(ctx)) return;
   
   const { message } = ctx;
@@ -38,7 +71,7 @@ async function protecc (ctx) { // comando para proteger una waifu que salga
   if (response.status == 200) return utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
 };
 
-async function list (ctx) { // envia el listado de waifus que tengal el usuari que envio el correo
+const list = async ctx => { // envia el listado de waifus que tengal el usuari que envio el correo
   if (ctx.chat.type != 'group' && ctx.chat.type != 'supergroup') return;
   const { message } = ctx;
   const { text, extras } = await utils.searchList(message.from.id, message.chat.id, message.message_id);
@@ -46,7 +79,7 @@ async function list (ctx) { // envia el listado de waifus que tengal el usuari q
   return await utils.sendMessage(ctx, text, extras);
 };
 
-async function addFavorite (ctx) { // se agrega una waifu al listado de favoritos
+const addFavorite = async ctx => { // se agrega una waifu al listado de favoritos
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -69,7 +102,7 @@ async function addFavorite (ctx) { // se agrega una waifu al listado de favorito
   if (response.status == 200) return utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
 };
 
-async function favoriteList (ctx) {
+const favoriteList = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -82,7 +115,7 @@ async function favoriteList (ctx) {
   }
 }
 
-async function tradeWaifu (ctx) {
+const tradeWaifu = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -115,7 +148,7 @@ async function tradeWaifu (ctx) {
   }
 }; 
 
-async function top (ctx) {
+const top = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -127,7 +160,7 @@ async function top (ctx) {
   }
 };
 
-async function changeTime (ctx) {
+const changeTime = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -141,7 +174,7 @@ async function changeTime (ctx) {
   if (status == 200) return utils.sendMessage('Se actualizo el limite para la aprarición de waifus', { reply_to_message_id: message.message_id });
 }
 
-async function profile (ctx) {
+const profile = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
@@ -156,7 +189,7 @@ async function profile (ctx) {
   return utils.sendMessage(ctx, text, { reply_to_message_id: ctx.message.message_id });
 }
 
-async function active (ctx) {
+const active = async ctx => {
   if (await utils.verifyGroup(ctx)) return await utils.addCountInChat(ctx);
 
   const waifus = await axios.get('/waifus/active');
@@ -177,6 +210,7 @@ async function active (ctx) {
 module.exports = {
   start,
   span,
+  help,
   protecc,
   list,
   addFavorite,

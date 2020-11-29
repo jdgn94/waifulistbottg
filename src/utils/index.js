@@ -174,10 +174,10 @@ const sendMessage = async (ctx, text = '', extra = {}) => {
   return messageData;
 };
 
-const sendSticker = async (ctx, stickers = []) => {
+const sendSticker = async (ctx, stickers = [], personal = false) => {
   if (stickers.length == 0) return sendMessage(ctx, 'Este sticker no esta definido todavia', { reply_to_message_id: ctx.message.message_id });
   
-  const messageId = ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
+  const messageId = personal ? ctx.message.message_id : ctx.message.reply_to_message ? ctx.message.reply_to_message.message_id : null;
   const sticker = await selectRandom(stickers);
 
   await addCountInChat(ctx);
@@ -227,6 +227,44 @@ const sendAlbum = async (ctx, waifus, totalPages, page = 1) => { // envia un alb
   return;
 };
 
+const sendLicence = async (ctx, links) => {
+  const message = ctx.message;
+  if (links.length == 0) return sendMessage(ctx, 'Este sticker no esta definido todavia', { reply_to_message_id: message.message_id });
+  
+  const extra = { reply_to_message_id: message.message_id };
+  const image = await selectRandom(links);
+
+  const arrayName = image.url.split('/');
+  const filename = arrayName[arrayName.length - 1];
+
+  const messageFormated = {
+    url: image.url,
+    filename,
+  };
+
+  let messageExtra = '';
+  // types: 1 = valido, 2 = temporal, 3 = falsa
+  switch (image.type) {
+    case 1:
+      messageExtra = `@${message.from.username} ha sacado una licencia y es legal te puedes quedar con la loli`;
+      break;
+    case 2:
+      messageExtra = `@${message.from.username} ha sacado una licencia y es temporal, que suerte tienes, disfrutala al maximo que es temporal`;
+      break;
+    case 3:
+      messageExtra = `@${message.from.username} ha sacado una licencia y es falsa, debes escapar rapido o te atraparan`;
+      break;
+    default:
+      messageExtra = `No se que es esto`
+      break;
+  }
+
+  await addCountInChat(ctx);
+  const messageData = await ctx.replyWithAnimation(messageFormated, extra);
+  await ctx.reply(messageExtra, extra);
+  return messageData;
+}
+
 module.exports = {
   verifyGroup,
   sendWaifu,
@@ -244,4 +282,5 @@ module.exports = {
   sendSticker,
   sendAnimationLink,
   sendAlbum,
+  sendLicence,
 };
