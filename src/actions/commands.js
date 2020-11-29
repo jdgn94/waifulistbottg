@@ -106,12 +106,12 @@ const favoriteList = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
-  const response = await axios.get(`/waifu_list/favorites?chatId=${message.chat.id}&userId=${message.from.id}&page=1`);
-  const { status, data } = response;
+  const page = isNaN(parseInt(message.text.split(' ')[1])) ? 1 : message.text.split(' ')[1];
+  const { status, data } = await axios.get(`/waifu_list/favorites?chatId=${message.chat.id}&userId=${message.from.id}&page=${page}`);
   switch(status){
-    case 200: return await utils.sendAlbum(ctx, data.waifus, data.totalPages);
-    case 201: return await utils.sendAlbum(ctx, data.message, { reply_to_message_id: message.message_id });
-    default: return await utils.sendAlbum(ctx, 'Ocurrio un error, intentalo mas tarde', { reply_to_message_id: message.message_id });
+    case 200: return await utils.sendAlbum(ctx, data.waifus, data.totalPages, page);
+    case 201: return await utils.sendMessage(ctx, data.message, { reply_to_message_id: message.message_id });
+    default: return await utils.sendMessage(ctx, 'Ocurrio un error obteniendo tu listado', { reply_to_message_id: message.message_id });
   }
 }
 

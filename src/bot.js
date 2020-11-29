@@ -50,6 +50,9 @@ bot.command('active', async ctx => await Commands.active(ctx));
 bot.action('nextPage', ctx => utils.changePage(ctx));
 bot.action('previusPage', ctx => utils.changePage(ctx));
 bot.action('details', ctx => utils.details(ctx));
+bot.action('nextPageFav', ctx => utils.changePageFav(ctx));
+bot.action('previusPageFav', ctx => utils.changePageFav(ctx));
+bot.action('detailsFav', ctx => utils.detailsFav(ctx));
 bot.action('approve', ctx => utils.trade(ctx, true));
 bot.action('decline', ctx => utils.trade(ctx, false));
 

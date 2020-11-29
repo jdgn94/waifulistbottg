@@ -30,9 +30,9 @@ const searchList = async (userId, chatIs, messageId, page = 1) => { // envia el 
   if (response.status != 200) return { text: 'Lo siento no pude obtener tu listado, intentalo mas tarde', extras: { reply_to_message_id: messageId }};
   const { data } = response;
 
-  const waifusFormated = await waifusText(data);
+  const formated = await waifusText(data);
   const text = `
-    ${data.message} \n${data.waifus.length > 0 ? waifusFormated.join('\n') : ''}
+    ${data.message} \n${data.waifus.length > 0 ? formated.join('\n') : ''}
   `;
 
   const extras = Telegraf.Extra
@@ -43,16 +43,26 @@ const searchList = async (userId, chatIs, messageId, page = 1) => { // envia el 
   return { text, extras };
 };
 
+const searchFavorite = async (userId, chatId, page = 1, ctx, username) => {
+  console.log('llegue aqui');
+  const { status, data } = await axios.get(`/waifu_list/favorites?chatId=${chatId}&userId=${userId}&page=${page}`);
+  switch(status){
+    case 200: return await sendAlbum(ctx, data.waifus, data.totalPages, page, username);
+    case 201: return await sendMessage(ctx, `@${username}. ${data.message}`);
+    default: return await sendMessage(ctx, `Ocurrio un error obteniendo tu listado @${username}`);
+  }
+}
+
 const waifusText = async (data) => { // formatea el mensaje del listado de las waifus
-  let waifusFormated = [];
+  let formated = [];
   const { page, waifus } = data;
 
   await waifus.forEach((waifu, index) => {
 
-    if (index == 0 || waifu.franchise_id != waifus[index -1].franchise_id) waifusFormated.push(`\n - ${waifu.franchise}`);
-    waifusFormated.push(`${((page -1) * 20) + index + 1}.- ${waifu.name}${waifu.nickname.length > 0 ? ' (' + waifu.nickname + ')' : ''} ${waifu.servant ? '(NP' + waifu.quantity + ')' : waifu.quantity > 1 ? '(' + waifu.quantity + ')' : ''}`)
+    if (index == 0 || waifu.franchise_id != waifus[index -1].franchise_id) formated.push(`\n - ${waifu.franchise}`);
+    formated.push(`${((page -1) * 20) + index + 1}.- ${waifu.name}${waifu.nickname.length > 0 ? ' (' + waifu.nickname + ')' : ''} ${waifu.servant ? '(NP' + waifu.quantity + ')' : waifu.quantity > 1 ? '(' + waifu.quantity + ')' : ''}`)
   });
-  return waifusFormated;
+  return formated;
 };
 
 const formatedUsers = async (ctx, users) => { // formatea a los usuarios para el envio de posiciones
@@ -89,6 +99,30 @@ const details = async (ctx) => { // funcion para mandar un mensaje que da la inf
   const text = `@${callback_query.from.username}. ${data.message} \nIlegales = ${data.ilegals}. \nLegales = ${data.legals}. \nIndefinidas = ${data.indefinides}. \nTotal = ${data.totals}.`;
   
   return sendMessage(ctx, text);
+};
+
+const changePageFav = async (ctx) => { // funcion para cambiar la pagina en el mensaje del listado de waifus
+  const { data, message, from } = ctx.update.callback_query;
+  const username = message.text.split(',')[0].slice(1);
+  if (from.username !== username) return;
+  const buttons = message.reply_markup.inline_keyboard[0];
+  const buttonSelected = await buttons.filter(button => button.callback_data == data);
+  let nextPage;
+  if (data == 'nextPageFav') nextPage = buttonSelected[0].text.split(' ')[1];
+  else nextPage = buttonSelected[0].text.split(' ')[2];
+  await searchFavorite(from.id, message.chat.id, nextPage, ctx, username);
+};
+
+const detailsFav = async (ctx) => { // funcion para mandar un mensaje que da la informacion del listado
+  const { callback_query } = ctx.update
+  const { message, from } = callback_query;
+  const username = message.text.split(',')[0].slice(1);
+  if (from.username !== username) return;
+  const { status, data } = await axios.get(`/waifu_list/favorites_details?userId=${callback_query.from.id}&chatId=${callback_query.message.chat.id}`);
+  const messageToSend = `Ok @${username}, este es el detalle de tu lista de favoritos.\n${data.message}`;
+  console.log(messageToSend);
+  const result = await sendMessage(ctx, messageToSend);
+  return result;
 };
 
 const trade = async (ctx, action)  => { // funcion para aprobar o crechazar el intercambio
@@ -142,6 +176,17 @@ const buttonsToList = (m, page, totalPages) => { // funcion para el pintado de l
   else return [buttonPrevius, buttonNext, extraButton];
 };
 
+const buttonsFavorites = (m, page, totalPages) => { // funcion para el pintado de los botones para el mensaje del listado
+  const extraButton = m.callbackButton('🔍 Detalles', 'detailsFav');
+  const buttonPrevius = m.callbackButton(`⬅️ Página ${page - 1}`, 'previusPageFav');
+  const buttonNext =  m.callbackButton(`Página ${page + 1} ➡️`, 'nextPageFav');
+  
+  if (page == 1 && totalPages < 2) return [extraButton];
+  else if (page == 1 && totalPages > 1) return [buttonNext, extraButton];
+  else if (page == totalPages && totalPages > 1) return [buttonPrevius, extraButton];
+  else return [buttonPrevius, buttonNext, extraButton];
+};
+
 // INFO: extra
 
 const medalPosition = (position) => {
@@ -165,6 +210,17 @@ const addCountInChat = async ctx => {
   const response = await axios.get(`/chats/${ctx.chat.id}`);
   if (response.status == 200) await sendWaifu(ctx);
   return;
+}
+
+const waifusFormated = async (waifus) => {
+  return await waifus.map(waifu => {
+    return {
+      media: { url: waifu.fav_image_url ? waifu.fav_image_url : waifu.image_url },
+      filename: waifu.fav_public_id ? waifu.fav_public_id : waifu.public_id,
+      caption: `${medalPosition(waifu.position)}.- ${waifu.name} - ${waifu.franchise}`,
+      type: 'photo'
+    }
+  });
 }
 
 // INFO: enviar mensaje
@@ -204,26 +260,22 @@ const sendAnimationLink = async (ctx, links = []) => {
   return messageData;
 };
 
-const sendAlbum = async (ctx, waifus, totalPages, page = 1) => { // envia un album de fotos de la lista de favoritas
-  const waifusFormated = await waifus.map(waifu => {
-    return {
-      media: { url: waifu.fav_image_url ? waifu.fav_image_url : waifu.image_url },
-      filename: waifu.fav_public_id ? waifu.fav_public_id : waifu.public_id,
-      caption: `${medalPosition(waifu.position)}.- ${waifu.name} - ${waifu.franchise}`,
-      type: 'photo'
-    }
-  });
+const sendAlbum = async (ctx, waifus, totalPages, page = 1, usernameTemp = '') => { // envia un album de fotos de la lista de favoritas
+  const formated = await waifusFormated(waifus);
+  const messageId = ctx.message ? ctx.message.reply_to_message.message_id : null;
 
-  const messageGalery = await ctx.replyWithMediaGroup(waifusFormated, { reply_to_message_id: ctx.message.message_id });
+  const messageGalery = await ctx.replyWithMediaGroup(formated, { reply_to_message_id: messageId });
   console.log('datos del mensaje enviado', messageGalery);
   
   // TODO: mensaje del paginado, hacer que funcione bien para ponerlo
-  // const extras = Telegraf.Extra
-  // .inReplyTo(messageGalery[0].message_id)
-  // .markdown()
-  // .markup((m) => m.inlineKeyboard(buttonsFavorites(m, parseInt(page), parseInt(totalPages))));
+  const extras = Telegraf.Extra
+  .inReplyTo(messageGalery[0].message_id)
+  .markdown()
+  .markup((m) => m.inlineKeyboard(buttonsFavorites(m, parseInt(page), parseInt(totalPages))));
 
-  // ctx.reply(`@${ctx.message.from.username}, este es tu listado.\nPágina: 1/${totalPages}`, extras);
+  const username = ctx.message ? ctx.message.from.username : usernameTemp;
+
+  ctx.reply(`@${username}, este es tu listado.\nPágina: ${page}/${totalPages}`, extras);
   return;
 };
 
@@ -269,10 +321,13 @@ module.exports = {
   verifyGroup,
   sendWaifu,
   searchList,
+  searchFavorite,
   formatedUsers,
   
   changePage,
   details,
+  changePageFav,
+  detailsFav,
   trade,
   
   buttonsToTrade,
