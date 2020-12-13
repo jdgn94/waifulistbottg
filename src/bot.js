@@ -29,6 +29,9 @@ bot.command('list', async ctx => await Commands.list(ctx));
 // se agrega una waifu al listado de favoritos
 bot.command('addfavorite', async ctx => await Commands.addFavorite(ctx)); 
 
+// elimina una waifu de la lista de favoritos
+bot.command('removefavorite', async ctx => await Commands.removeFavorite(ctx));
+
 // muestra las imagenesd del listado de favoritos
 bot.command('favoritelist', async ctx => await Commands.favoriteList(ctx)); 
 

@@ -37,6 +37,7 @@ Lista de los comando.
 - /protecc se usa para agregar a la waifu que haya aparecido, debe ser usado con el nombre del personaje. Solo se la queda el que hacierte primero.
 - /list muesta el listado de todas las waifus que tienes en tu lista
 - /addFavorite agraga una waifu de tu lista a la favoritos, de ser usado con 2 números, el primero indica la posición en /list, el segundo la posición que le quieres agregar en el listado de favoritos.
+- /removeFavorite se elimina una waifu de tu lista de favoritos, solo debes mandar el número perteneciente a la posición en la que se encuentra la waifu en tu lista.
 - /favoriteList muestra el listado de favoritos con las images de los personajes, la cantidad de páginas depende del nivel que tenga el usuario.
 - /tradeWaifu se usa para intercambiar waifus entre 2 usuarios del grupo, se usa de la siguiente forma, el primer número es la posición de tu en /list y el segundo número es la posición en /list del usuario con quien quieres intercambiar, el intercambio se hace contestando a un mensaje del usuario con quien quieres intercambiar.
 - /top muestra la posición de los usuarios en orden de quien tenga mas waifus.
@@ -101,6 +102,30 @@ const addFavorite = async ctx => { // se agrega una waifu al listado de favorito
   const response = await axios.post('/waifus/change_favorite', body);
   if (response.status == 200) return utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
 };
+
+const removeFavorite = async ctx => { // elimina una waifu del listado de favoritos
+  if (!await utils.verifyGroup(ctx)) return;
+
+  const { message } = ctx;
+  const text = message.text.split(' ');
+  const position = text[1];
+  
+  if (!position || isNaN(parseInt(position)) || position < 1) {
+    const text = 'Debe introducir un número valido para que se pueda eliminar a la waifu de la lista';
+    
+    return utils.sendMessage(ctx, text, { replay_to_message_id: message.message_id });
+  }
+
+  const body = {
+    position,
+    userIdTg: message.from.id,
+    chatIdTg: message.chat.id
+  };
+
+  const { status, data } = await axios.put('/waifu_list/deleted_favorite', body);
+  // console.log(data);
+  if (status == 200) return utils.sendMessage(ctx, data.message, { reply_to_message_id: message.message_id });
+}
 
 const favoriteList = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
@@ -215,6 +240,7 @@ module.exports = {
   protecc,
   list,
   addFavorite,
+  removeFavorite,
   favoriteList,
   tradeWaifu,
   top,
