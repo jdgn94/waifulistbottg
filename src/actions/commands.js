@@ -37,11 +37,12 @@ Lista de los comando.
 - /protecc se usa para agregar a la waifu que haya aparecido, debe ser usado con el nombre del personaje. Solo se la queda el que hacierte primero.
 - /list muesta el listado de todas las waifus que tienes en tu lista
 - /addFavorite agraga una waifu de tu lista a la favoritos, de ser usado con 2 números, el primero indica la posición en /list, el segundo la posición que le quieres agregar en el listado de favoritos.
-- /removeFavorite se elimina una waifu de tu lista de favoritos, solo debes mandar el número perteneciente a la posición en la que se encuentra la waifu en tu lista.
-- /favoriteList muestra el listado de favoritos con las images de los personajes, la cantidad de páginas depende del nivel que tenga el usuario.
-- /tradeWaifu se usa para intercambiar waifus entre 2 usuarios del grupo, se usa de la siguiente forma, el primer número es la posición de tu en /list y el segundo número es la posición en /list del usuario con quien quieres intercambiar, el intercambio se hace contestando a un mensaje del usuario con quien quieres intercambiar.
+- /speciallist muestra el listado de imagenes favorias en base a las waifus que tengas en tu lista.
+- /removefavorite se elimina una waifu de tu lista de favoritos, solo debes mandar el número perteneciente a la posición en la que se encuentra la waifu en tu lista.
+- /favoritelist muestra el listado de favoritos con las images de los personajes, la cantidad de páginas depende del nivel que tenga el usuario.
+- /tradewaifu se usa para intercambiar waifus entre 2 usuarios del grupo, se usa de la siguiente forma, el primer número es la posición de tu en /list y el segundo número es la posición en /list del usuario con quien quieres intercambiar, el intercambio se hace contestando a un mensaje del usuario con quien quieres intercambiar.
 - /top muestra la posición de los usuarios en orden de quien tenga mas waifus.
-- /changeTime cambia la cantidad de mensajes necesarios para que puedan aparecen waifus (50 - 1000)-
+- /changetime cambia la cantidad de mensajes necesarios para que puedan aparecen waifus (50 - 1000)-
 - /profile muestra el perfíl de la persona que lo pidio.
 
 Lista de hashtags, estos envian un sticker o un gif.
@@ -69,7 +70,12 @@ const protecc = async ctx => { // comando para proteger una waifu que salga
   
   const { message } = ctx;
   const response = await axios.post('/waifus/protecc', { message });
-  if (response.status == 200) return utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
+  if (response.status == 200) {
+    utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
+    const data = await utils.addSpecial.addImageSpecialToList(response.data.extras);
+    if (data) return utils.sendMessage(ctx, `@${message.from.username}, ${data.message}`);
+  }
+  return;
 };
 
 const list = async ctx => { // envia el listado de waifus que tengal el usuari que envio el correo
@@ -132,12 +138,29 @@ const favoriteList = async ctx => {
 
   const { message } = ctx;
   const page = isNaN(parseInt(message.text.split(' ')[1])) ? 1 : message.text.split(' ')[1];
-  // return console.log(page);
+
   const { status, data } = await axios.get(`/waifu_list/favorites?chatId=${message.chat.id}&userId=${message.from.id}&page=${page}`);
   switch(status){
     case 200: return await utils.sendAlbum(ctx, data.waifus, data.totalPages, page);
     case 201: return await utils.sendMessage(ctx, data.message, { reply_to_message_id: message.message_id });
     default: return await utils.sendMessage(ctx, 'Ocurrio un error obteniendo tu listado', { reply_to_message_id: message.message_id });
+  }
+}
+
+const specialList = async ctx => {
+  if (!await utils.verifyGroup(ctx)) return;
+  const { message } = ctx;
+  const page = isNaN(parseInt(message.text.split(' ')[1])) ? 1 : message.text.split(' ')[1];
+
+  const { status, data } = await axios.get(`/special_image/list?chatId=${message.chat.id}&userId=${message.from.id}&page=${page}`);
+  console.log(status);
+  console.log(data);
+  switch(status) {
+    case 200:
+      return await utils.sendAlbumSpecial(ctx, data.list, data.totalPages, data.actualPage);
+    case 204:
+      return utils.sendMessage(ctx, 'No cumples con los requicitos para tener imagenes especiales', { reply_to_message_id: message.message_id });
+    default: return;
   }
 }
 
@@ -242,6 +265,7 @@ module.exports = {
   addFavorite,
   removeFavorite,
   favoriteList,
+  specialList,
   tradeWaifu,
   top,
   changeTime,

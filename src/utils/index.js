@@ -1,5 +1,6 @@
 const Telegraf = require('telegraf');
 const axios = require('../config/axios');
+const addSpecial = require('./addSpecial');
 
 const verifyGroup = async ctx => {
   if (ctx.chat.type == 'group' || ctx.chat.type == 'supergroup') return true;
@@ -44,11 +45,19 @@ const searchList = async (userId, chatIs, messageId, page = 1) => { // envia el 
 };
 
 const searchFavorite = async (userId, chatId, page = 1, ctx, username) => {
-  console.log('llegue aqui');
   const { status, data } = await axios.get(`/waifu_list/favorites?chatId=${chatId}&userId=${userId}&page=${page}`);
   switch(status){
     case 200: return await sendAlbum(ctx, data.waifus, data.totalPages, page, username);
     case 201: return await sendMessage(ctx, `@${username}. ${data.message}`);
+    default: return await sendMessage(ctx, `Ocurrio un error obteniendo tu listado @${username}`);
+  }
+}
+
+const searchSpecial = async (userId, chatId, page = 1, ctx, username) => {
+  const { status, data } = await axios.get(`/special_image/list?chatId=${chatId}&userId=${userId}&page=${page}`);
+  switch(status){
+    case 200: return await sendAlbumSpecial(ctx, data.list, data.totalPages, page, username);
+    case 204: return await sendMessage(ctx, `@${username}. No tienes waifus en esta pagina`);
     default: return await sendMessage(ctx, `Ocurrio un error obteniendo tu listado @${username}`);
   }
 }
@@ -125,6 +134,18 @@ const detailsFav = async (ctx) => { // funcion para mandar un mensaje que da la 
   return result;
 };
 
+const changePageSpecial = async (ctx) => { // funcion para cambiar la pagina en el mensaje del listado de imagenes especiales
+  const { data, message, from } = ctx.update.callback_query;
+  const username = message.text.split(',')[0].slice(1);
+  if (from.username !== username) return;
+  const buttons = message.reply_markup.inline_keyboard[0];
+  const buttonSelected = await buttons.filter(button => button.callback_data == data);
+  let nextPage;
+  if (data == 'nextPageSpecial') nextPage = buttonSelected[0].text.split(' ')[1];
+  else nextPage = buttonSelected[0].text.split(' ')[2];
+  await searchSpecial(from.id, message.chat.id, nextPage, ctx, username);
+};
+
 const trade = async (ctx, action)  => { // funcion para aprobar o crechazar el intercambio
   const { message, from } = ctx.update.callback_query;
   const body = {
@@ -132,18 +153,26 @@ const trade = async (ctx, action)  => { // funcion para aprobar o crechazar el i
     userTgId: from.id,
     answer: action
   };
+  const dataTrade = await axios.get('/waifu_list/trade_info?messageId=' + message.message_id);
   const { data, status } = await axios.put('/waifu_list/trade_answer', body);
   const text = message.text.split(' pendiente');
   switch(status) {
     case 200:  
       ctx.editMessageText(`${text[0]} aceptada ✅`);
       sendMessage(ctx, data.message);
+      const emiterParams = { chatId: dataTrade.chatId, userId: dataTrade.user_emiter_id, waifuId: dataTrade.waifu_emiter_id, newWaofi: true }
+      const dataEmiter = await addSpecial.addImageSpecialToList(emiterParams);
+      if (dataEmiter) sendMessage(ctx, `@${dataTrade.user_emiter_name}, ${data.message}`);
+      const receptorParams = { chatId: dataTrade.chatId, userId: dataTrade.user_receptor_id, waifuId: dataTrade.waifu_receptor_id, newWaofi: true }
+      const dataReceptor = await addSpecial.addImageSpecialToList(receptorParams);
+      if (dataReceptor) sendMessage(ctx, `@${dataTrade.user_receptor_name}, ${data.message}`);
       return;
-    case 201: return ctx.editMessageText(`${text[0]} rechazada ❌`);
+    case 201: 
+      ctx.editMessageText(`${text[0]} rechazada ❌`);
+      return sendMessage(ctx, `El intercambio fue rechazado por ${message.from.username}`)
     case 202:
       ctx.editMessageText(`${text[0]} cancelada ⚠️`);
-      sendMessage(ctx, data.message);
-      return;
+      return sendMessage(ctx, data.message);
     default: return;
   }
 };
@@ -187,6 +216,16 @@ const buttonsFavorites = (m, page, totalPages) => { // funcion para el pintado d
   else return [buttonPrevius, buttonNext, extraButton];
 };
 
+const buttonsSpecial = (m, page, totalPages) => { // funcion para el pintado de los botones para el mensaje del listado
+  const buttonPrevius = m.callbackButton(`⬅️ Página ${page - 1}`, 'previusPageSpecial');
+  const buttonNext =  m.callbackButton(`Página ${page + 1} ➡️`, 'nextPageSpecial');
+  
+  if (page == 1 && totalPages < 2) return [];
+  else if (page == 1 && totalPages > 1) return [buttonNext];
+  else if (page == totalPages && totalPages > 1) return [buttonPrevius];
+  else return [buttonPrevius, buttonNext];
+};
+
 // INFO: extra
 
 const medalPosition = (position) => {
@@ -212,12 +251,12 @@ const addCountInChat = async ctx => {
   return;
 }
 
-const waifusFormated = async (waifus) => {
+const waifusFormated = async (waifus, addCaption = true) => {
   return await waifus.map(waifu => {
     return {
       media: { url: waifu.fav_image_url ? waifu.fav_image_url : waifu.image_url },
       filename: waifu.fav_public_id ? waifu.fav_public_id : waifu.public_id,
-      caption: `${medalPosition(waifu.position)}.- ${waifu.name} - ${waifu.franchise}`,
+      caption: addCaption ? `${medalPosition(waifu.position)}.- ${waifu.name} - ${waifu.franchise}` : '',
       type: 'photo'
     }
   });
@@ -265,9 +304,7 @@ const sendAlbum = async (ctx, waifus, totalPages, page = 1, usernameTemp = '') =
   const messageId = ctx.message ? ctx.message.message_id : null;
 
   const messageGalery = await ctx.replyWithMediaGroup(formated, { reply_to_message_id: messageId });
-  console.log('datos del mensaje enviado', messageGalery);
-  
-  // TODO: mensaje del paginado, hacer que funcione bien para ponerlo
+
   const extras = Telegraf.Extra
   .inReplyTo(messageGalery[0].message_id)
   .markdown()
@@ -278,6 +315,23 @@ const sendAlbum = async (ctx, waifus, totalPages, page = 1, usernameTemp = '') =
   ctx.reply(`@${username}, este es tu listado.\nPágina: ${page}/${totalPages}`, extras);
   return;
 };
+
+const sendAlbumSpecial = async (ctx, list, totalPages, page, usernameTemp = '') => {
+  const formated = await waifusFormated(list, false);
+  const messageId = ctx.message ? ctx.message.message_id : null;
+
+  const messageGalery = await ctx.replyWithMediaGroup(formated, { reply_to_message_id: messageId });
+  console.log(messageGalery);
+
+  const extras = Telegraf.Extra
+  .inReplyTo(messageGalery[0].message_id)
+  .markdown()
+  .markup((m) => m.inlineKeyboard(buttonsSpecial(m, parseInt(page), parseInt(totalPages))));
+
+  const username = ctx.message ? ctx.message.from.username : usernameTemp;
+  ctx.reply(`@${username}, este es tu listado especial, aqui se muestran las waifus que tienen un fuerte vinculo.\nPágina: ${page}/${totalPages}`, extras);
+  return;
+}
 
 const sendLicence = async (ctx, links) => {
   const message = ctx.message;
@@ -322,20 +376,26 @@ module.exports = {
   sendWaifu,
   searchList,
   searchFavorite,
+  searchSpecial,
   formatedUsers,
   
   changePage,
   details,
   changePageFav,
   detailsFav,
+  changePageSpecial,
   trade,
   
   buttonsToTrade,
   addCountInChat,
+  buttonsSpecial,
 
   sendMessage,
   sendSticker,
   sendAnimationLink,
   sendAlbum,
+  sendAlbumSpecial,
   sendLicence,
+
+  addSpecial
 };

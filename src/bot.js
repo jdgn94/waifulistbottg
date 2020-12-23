@@ -26,6 +26,9 @@ bot.command('protecc', async ctx => await Commands.protecc(ctx));
 // envia el listado de waifus que tengal el usuari que envio el correo
 bot.command('list', async ctx => await Commands.list(ctx)); 
 
+// envia un album con las imagenes que uno tenga en el listado de especiales
+bot.command('speciallist', async ctx => await Commands.specialList(ctx));
+
 // se agrega una waifu al listado de favoritos
 bot.command('addfavorite', async ctx => await Commands.addFavorite(ctx)); 
 
@@ -56,6 +59,8 @@ bot.action('details', ctx => utils.details(ctx));
 bot.action('nextPageFav', ctx => utils.changePageFav(ctx));
 bot.action('previusPageFav', ctx => utils.changePageFav(ctx));
 bot.action('detailsFav', ctx => utils.detailsFav(ctx));
+bot.action('previusPageSpecial', ctx => utils.changePageSpecial(ctx));
+bot.action('nextPageSpecial', ctx => utils.changePageSpecial(ctx));
 bot.action('approve', ctx => utils.trade(ctx, true));
 bot.action('decline', ctx => utils.trade(ctx, false));
 
