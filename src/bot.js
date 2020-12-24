@@ -50,6 +50,9 @@ bot.command('changetime', async ctx => await Commands.changeTime(ctx));
 // muestra el perfil del usuario que lo pide
 bot.command('profile', async ctx => await Commands.profile(ctx)); 
 
+// muesta el listado de franquicias, si se envia un numero se muestra el listado de waifus perteneciente a esa franquicia
+bot.command('franchiselist', async ctx => await Commands.franchiseList(ctx));
+
 bot.command('active', async ctx => await Commands.active(ctx)); 
 // actions
 
@@ -61,6 +64,8 @@ bot.action('previusPageFav', ctx => utils.changePageFav(ctx));
 bot.action('detailsFav', ctx => utils.detailsFav(ctx));
 bot.action('previusPageSpecial', ctx => utils.changePageSpecial(ctx));
 bot.action('nextPageSpecial', ctx => utils.changePageSpecial(ctx));
+bot.action('previusPageFranchise', ctx => utils.changePageFranchise(ctx));
+bot.action('nextPageFranchise', ctx => utils.changePageFranchise(ctx));
 bot.action('approve', ctx => utils.trade(ctx, true));
 bot.action('decline', ctx => utils.trade(ctx, false));
 

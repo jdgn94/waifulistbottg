@@ -238,6 +238,19 @@ const profile = async ctx => {
   return utils.sendMessage(ctx, text, { reply_to_message_id: ctx.message.message_id });
 }
 
+const franchiseList = async ctx => {
+  if (!await utils.verifyGroup(ctx)) return;
+
+  const { message } = ctx;
+  const franchiseNumber = isNaN(parseInt(message.text.split(' ')[1])) ? 0 : message.text.split(' ')[1];
+
+  const { status, data } = await axios.get('/franchises/list?franchise_number=' + franchiseNumber);
+  console.log(status, data);
+  if (status == 200) {
+    utils.sendMessageFranchise(ctx, data, franchiseNumber);
+  }
+}
+
 const active = async ctx => {
   if (await utils.verifyGroup(ctx)) return await utils.addCountInChat(ctx);
 
@@ -270,5 +283,6 @@ module.exports = {
   top,
   changeTime,
   profile,
+  franchiseList,
   active
 };

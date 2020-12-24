@@ -62,6 +62,16 @@ const searchSpecial = async (userId, chatId, page = 1, ctx, username) => {
   }
 }
 
+const searchFranchise = async (franchiseNumber, page, messageId) => {
+  console.log(franchiseNumber, page);
+  const { status, data } = await axios.get('/franchises/list?franchise_number=' + franchiseNumber + '&page=' + page);
+  console.log(status, data);
+
+  const { message, extras } = await messageFranchiseData(data, franchiseNumber, messageId);
+
+  return { message, extras };
+}
+
 const waifusText = async (data) => { // formatea el mensaje del listado de las waifus
   let formated = [];
   const { page, waifus } = data;
@@ -146,6 +156,23 @@ const changePageSpecial = async (ctx) => { // funcion para cambiar la pagina en 
   await searchSpecial(from.id, message.chat.id, nextPage, ctx, username);
 };
 
+const changePageFranchise = async ctx => {
+  const { callback_query } = ctx.update
+  if (callback_query.from.id != callback_query.message.reply_to_message.from.id) return;
+  const { data, message, from } = callback_query;
+  const { text } = message.reply_to_message;
+  const franchiseNumber = text.split(' ')[1] || 0;
+  const buttons = message.reply_markup.inline_keyboard[0];
+  const buttonSelected = await buttons.filter(button => button.callback_data == data);
+  
+  let nextPage;
+  if (data == 'nextPageFranchise') nextPage = buttonSelected[0].text.split(' ')[1]
+  else nextPage = buttonSelected[0].text.split(' ')[2];
+  const result = await searchFranchise(franchiseNumber, nextPage, message.message_id);
+  console.log('aqui debo reescribir el mensaje');
+  return ctx.editMessageText(result.message, result.extras);
+}
+
 const trade = async (ctx, action)  => { // funcion para aprobar o crechazar el intercambio
   const { message, from } = ctx.update.callback_query;
   const body = {
@@ -225,6 +252,17 @@ const buttonsSpecial = (m, page, totalPages) => { // funcion para el pintado de 
   else if (page == totalPages && totalPages > 1) return [buttonPrevius];
   else return [buttonPrevius, buttonNext];
 };
+
+const buttonsFranchiseList = (m, page, totalPages) => {
+  console.log('total de paginas', totalPages);
+  const buttonPrevius = m.callbackButton(`⬅️ Página ${page - 1}`, 'previusPageFranchise');
+  const buttonNext =  m.callbackButton(`Página ${page + 1} ➡️`, 'nextPageFranchise');
+  
+  if (page == 1 && totalPages < 2) return [];
+  else if (page == 1 && totalPages > 1) return [buttonNext];
+  else if (page == totalPages && totalPages > 1) return [buttonPrevius];
+  else return [buttonPrevius, buttonNext];
+}
 
 // INFO: extra
 
@@ -371,6 +409,36 @@ const sendLicence = async (ctx, links) => {
   return messageData;
 }
 
+const sendMessageFranchise = async (ctx, data, franchiseNumber) => {
+  console.log('llegue a esta funcion');
+  const { message, extras } = await messageFranchiseData(data, franchiseNumber, ctx.message.message_id);
+  
+  ctx.reply(message, extras);
+}
+
+const formatedName = async (list, page = 1, quantity = true) => {
+  const formated = await list.map((item, index) => quantity ? `${(page - 1) * 20 + index + 1}.- ${item.name} cantidad: ${item.quantity}.` : `${(page - 1) * 20 + index + 1}.- ${item.name}.`);
+  return formated;
+}
+
+const messageFranchiseData = async (data, franchiseNumber, messageId) => {
+  let message = '';
+  const extras = Telegraf.Extra
+  .inReplyTo(messageId)
+  .markdown()
+  .markup((m) => m.inlineKeyboard(buttonsFranchiseList(m, parseInt(data.page), parseInt(data.totalPage))));
+
+  if (franchiseNumber == 0) {
+    const formated = await formatedName(data.list, data.page);
+    message = 'Este es todo el listado de las franquicias que tienen waifus.\n\n' + formated.join('\n');
+  } else {
+    const formated = await formatedName(data.list, data.page, false);
+    message = `Este es elistado de las waifus que pertenecen a la franquicia ${data.franchise.name}, hay un total de ${data.franchise.quantity}.\n\n${formated.join('\n')}`;
+  }
+
+  return { message, extras };
+}
+
 module.exports = {
   verifyGroup,
   sendWaifu,
@@ -384,11 +452,13 @@ module.exports = {
   changePageFav,
   detailsFav,
   changePageSpecial,
+  changePageFranchise,
   trade,
   
   buttonsToTrade,
   addCountInChat,
   buttonsSpecial,
+  buttonsFranchiseList,
 
   sendMessage,
   sendSticker,
@@ -396,6 +466,7 @@ module.exports = {
   sendAlbum,
   sendAlbumSpecial,
   sendLicence,
+  sendMessageFranchise,
 
   addSpecial
 };
