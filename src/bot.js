@@ -56,6 +56,9 @@ bot.command('franchiselist', async ctx => await Commands.franchiseList(ctx));
 // cambia puntos por waifu
 bot.command('changepointstowaifu', async ctx => await Commands.addWaifu(ctx));
 
+// cambia waifus por puntos
+bot.command('changewaifutopoints', async ctx => await Commands.deleteWaifu(ctx));
+
 bot.command('active', async ctx => await Commands.active(ctx)); 
 // actions
 

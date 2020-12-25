@@ -57,7 +57,7 @@ const searchSpecial = async (userId, chatId, page = 1, ctx, username) => {
   const { status, data } = await axios.get(`/special_image/list?chatId=${chatId}&userId=${userId}&page=${page}`);
   switch(status){
     case 200: return await sendAlbumSpecial(ctx, data.list, data.totalPages, page, username);
-    case 204: return await sendMessage(ctx, `@${username}. No tienes waifus en esta pagina`);
+    case 205: return await sendMessage(ctx, `@${username}. No tienes waifus en esta pagina`);
     default: return await sendMessage(ctx, `Ocurrio un error obteniendo tu listado @${username}`);
   }
 }
