@@ -53,6 +53,9 @@ bot.command('profile', async ctx => await Commands.profile(ctx));
 // muesta el listado de franquicias, si se envia un numero se muestra el listado de waifus perteneciente a esa franquicia
 bot.command('franchiselist', async ctx => await Commands.franchiseList(ctx));
 
+// cambia puntos por waifu
+bot.command('changepointstowaifu', async ctx => await Commands.addWaifu(ctx));
+
 bot.command('active', async ctx => await Commands.active(ctx)); 
 // actions
 

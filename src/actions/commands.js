@@ -35,7 +35,8 @@ const help = async ctx => {
 Lista de los comando.
 - /start se usa para inicir el bot, solo funciona 1 vez y debe ser usado en un grupo para que empieze a funcionar.
 - /protecc se usa para agregar a la waifu que haya aparecido, debe ser usado con el nombre del personaje. Solo se la queda el que hacierte primero.
-- /list muesta el listado de todas las waifus que tienes en tu lista
+- /list muesta el listado de todas las waifus que tienes en tu lista.
+- /franchiselist hay 2 formas de usar este comando, una enviandolo solo, que muestra todas las franquicias que tienen waifus, la segunda forma de usarlo es enviarlo con un numero, el numero indica la franquicia por lo cual se mostrara un listado con las waifus de la franquicia que fue se le indica.
 - /addFavorite agraga una waifu de tu lista a la favoritos, de ser usado con 2 números, el primero indica la posición en /list, el segundo la posición que le quieres agregar en el listado de favoritos.
 - /speciallist muestra el listado de imagenes favorias en base a las waifus que tengas en tu lista.
 - /removefavorite se elimina una waifu de tu lista de favoritos, solo debes mandar el número perteneciente a la posición en la que se encuentra la waifu en tu lista.
@@ -251,6 +252,40 @@ const franchiseList = async ctx => {
   }
 }
 
+const addWaifu = async ctx => {
+  if (!await utils.verifyGroup(ctx)) return;
+
+  const { message } = ctx;
+  const franchiseNumber = isNaN(parseInt(message.text.split(' ')[1])) ? 0 : parseInt(message.text.split(' ')[1]);
+  const waifuNumber = isNaN(parseInt(message.text.split(' ')[2])) ? 0 : parseInt(message.text.split(' ')[2]);
+  const body = {
+    userId: message.from.id, 
+    chatId: message.chat.id,
+    franchiseNumber,
+    waifuNumber
+  };
+  const { status, data } = await axios.post('/waifu_list/add_list', body);
+  console.log(status, data);
+
+  switch (status) {
+    case 200:
+      const message = `Se a agregado a ${data.waifu.name} de ${data.franchise.name} a tu listado. Se han restado ${data.cost} puntos, te quedan ${data.profile.points - data.cost}`;
+      ctx.reply(message, { reply_to_message_id: message.message_id })
+      const extra = {
+        userId: data.user.id,
+        chatId: data.chat.id,
+        waifuId: data.waifu.id,
+        newWaifu: true
+      }
+      const values = await utils.addSpecial.addImageSpecialToList(extra);
+      if (values) return utils.sendMessage(ctx, `@${message.from.username}, ${data.message}`);
+      return;
+    case 204:
+      return ctx.reply(data, { reply_to_message_id: message.message_id });
+    default: return ;
+  }
+}
+
 const active = async ctx => {
   if (await utils.verifyGroup(ctx)) return await utils.addCountInChat(ctx);
 
@@ -284,5 +319,6 @@ module.exports = {
   changeTime,
   profile,
   franchiseList,
+  addWaifu,
   active
 };
