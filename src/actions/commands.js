@@ -282,7 +282,7 @@ const addWaifu = async ctx => {
         newWaifu: true
       }
       const values = await utils.addSpecial.addImageSpecialToList(extra);
-      if (values) return utils.sendMessage(ctx, `@${message.from.username}, ${data.message}`);
+      if (values) return utils.sendMessage(ctx, `@${message.from.username}, ${values.message}`);
       return;
     case 205:
       return ctx.reply(data, { reply_to_message_id: message.message_id });
