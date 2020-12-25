@@ -273,8 +273,8 @@ const addWaifu = async ctx => {
 
   switch (status) {
     case 200:
-      const message = `Se a agregado a ${data.waifu.name} de ${data.franchise.name} a tu listado. Se han restado ${data.cost} puntos, te quedan ${data.profile.points - data.cost}`;
-      ctx.reply(message, { reply_to_message_id: message.message_id })
+      const text = `Se a agregado a ${data.waifu.name} de ${data.franchise.name} a tu listado. Se han restado ${data.cost} puntos, te quedan ${data.profile.points - data.cost}`;
+      ctx.reply(text, { reply_to_message_id: message.message_id })
       const extra = {
         userId: data.user.id,
         chatId: data.chat.id,
