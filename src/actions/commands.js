@@ -77,7 +77,6 @@ const protecc = async ctx => { // comando para proteger una waifu que salga
   if (response.status == 200) {
     utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
     const data = await utils.addSpecial.addImageSpecialToList(response.data.extras);
-    console.log(data);
     if (data) return utils.sendMessage(ctx, `@${message.from.username}, ${data.message}`);
   }
   return;
@@ -134,7 +133,6 @@ const removeFavorite = async ctx => { // elimina una waifu del listado de favori
   };
 
   const { status, data } = await axios.put('/waifu_list/deleted_favorite', body);
-  // console.log(data);
   if (status == 200) return utils.sendMessage(ctx, data.message, { reply_to_message_id: message.message_id });
 }
 
@@ -158,8 +156,6 @@ const specialList = async ctx => {
   const page = isNaN(parseInt(message.text.split(' ')[1])) ? 1 : message.text.split(' ')[1];
 
   const { status, data } = await axios.get(`/special_image/list?chatId=${message.chat.id}&userId=${message.from.id}&page=${page}`);
-  console.log(status);
-  console.log(data);
   switch(status) {
     case 200:
       return await utils.sendAlbumSpecial(ctx, data.list, data.totalPages, data.actualPage);
@@ -250,7 +246,6 @@ const franchiseList = async ctx => {
   const franchiseNumber = isNaN(parseInt(message.text.split(' ')[1])) ? 0 : message.text.split(' ')[1];
 
   const { status, data } = await axios.get('/franchises/list?franchise_number=' + franchiseNumber);
-  console.log(status, data);
   if (status == 200) {
     utils.sendMessageFranchise(ctx, data, franchiseNumber);
   }
@@ -269,7 +264,6 @@ const addWaifu = async ctx => {
     waifuNumber
   };
   const { status, data } = await axios.post('/waifu_list/add_list', body);
-  console.log(status, data);
 
   switch (status) {
     case 200:
@@ -305,7 +299,6 @@ const deleteWaifu = async ctx => {
   }
 
   const { status, data } = await axios.post('/waifu_list/delete_list', body);
-  console.log(status, data);
   switch(status) {
     case 200:
       const text = `Has cambiado a ${data.waifu.name} de ${data.waifu.franchise} por una cantida de ${data.points} ${data.points > 1 ? 'puntos' : 'punto'}. Tienes un total de ${data.profile.points + data.points} ${data.profile.points + data.points > 1 ? 'puntos' : 'punto'}`;
@@ -320,7 +313,6 @@ const active = async ctx => {
 
   const waifus = await axios.get('/waifus/active');
   let message = '';
-  console.log(waifus.data);
   if (waifus.data.length > 0) {
     message = 'Las waifus activas son:\n';
     await waifus.data.forEach(waifu => {
