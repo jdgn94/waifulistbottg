@@ -294,7 +294,7 @@ const waifusFormated = async (waifus, addCaption = true) => {
     return {
       media: { url: waifu.fav_image_url ? waifu.fav_image_url : waifu.image_url },
       filename: waifu.fav_public_id ? waifu.fav_public_id : waifu.public_id,
-      caption: addCaption ? `${medalPosition(waifu.position)}.- ${waifu.name} - ${waifu.franchise}` : '',
+      caption: addCaption ? `${waifu.position ? medalPosition(waifu.position) + '.- ': ''}${waifu.name} - ${waifu.franchise}` : '',
       type: 'photo'
     }
   });
@@ -355,9 +355,10 @@ const sendAlbum = async (ctx, waifus, totalPages, page = 1, usernameTemp = '') =
 };
 
 const sendAlbumSpecial = async (ctx, list, totalPages, page, usernameTemp = '') => {
-  const formated = await waifusFormated(list, false);
+  const formated = await waifusFormated(list);
   const messageId = ctx.message ? ctx.message.message_id : null;
 
+  // return;
   const messageGalery = await ctx.replyWithMediaGroup(formated, { reply_to_message_id: messageId });
   console.log(messageGalery);
 
