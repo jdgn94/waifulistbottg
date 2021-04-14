@@ -187,10 +187,10 @@ const trade = async (ctx, action)  => { // funcion para aprobar o crechazar el i
     case 200:  
       ctx.editMessageText(`${text[0]} aceptada ✅`);
       sendMessage(ctx, data.message);
-      const emiterParams = { chatId: dataTrade.data.chatId, userId: dataTrade.data.user_emiter_id, waifuId: dataTrade.data.waifu_emiter_id, newWaofu: true }
+      const emiterParams = { chatId: dataTrade.data.chatId, userId: dataTrade.data.user_emiter_id, waifuId: dataTrade.data.waifu_emiter_id, newWaifu: true }
       const dataEmiter = await addSpecial.addImageSpecialToList(emiterParams);
       if (dataEmiter) sendMessage(ctx, `@${dataTrade.data.user_emiter_name}, se ha agregado una nueva imagen a tu lista de favoritos`);
-      const receptorParams = { chatId: dataTrade.data.chatId, userId: dataTrade.data.user_receptor_id, waifuId: dataTrade.data.waifu_receptor_id, newWaofu: true }
+      const receptorParams = { chatId: dataTrade.data.chatId, userId: dataTrade.data.user_receptor_id, waifuId: dataTrade.data.waifu_receptor_id, newWaifu: true }
       const dataReceptor = await addSpecial.addImageSpecialToList(receptorParams);
       if (dataReceptor) sendMessage(ctx, `@${dataTrade.data.user_receptor_name}, se ha agregado una nueva imagen a tu lista de favoritos`);
       return;
