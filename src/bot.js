@@ -11,44 +11,43 @@ bot.startPolling();
 
 // Init
 // hace la llamada para agregar el chat a la bd
-bot.start(async ctx => await Commands.start(ctx)); 
+bot.start(async ctx => await Commands.start(ctx));
 
 // comands
-
-bot.command('span', async ctx => await Commands.span(ctx)); 
+bot.command('span', async ctx => await Commands.span(ctx));
 
 // comando que muestra todos los comandos y hashtags del bot
 bot.command('/help', async ctx => await Commands.help(ctx));
 
 // comando para proteger una waifu que salga
-bot.command('protecc', async ctx => await Commands.protecc(ctx)); 
+bot.command('protecc', async ctx => await Commands.protecc(ctx));
 
 // envia el listado de waifus que tengal el usuari que envio el correo
-bot.command('list', async ctx => await Commands.list(ctx)); 
+bot.command('list', async ctx => await Commands.list(ctx));
 
 // envia un album con las imagenes que uno tenga en el listado de especiales
 bot.command('speciallist', async ctx => await Commands.specialList(ctx));
 
 // se agrega una waifu al listado de favoritos
-bot.command('addfavorite', async ctx => await Commands.addFavorite(ctx)); 
+bot.command('addfavorite', async ctx => await Commands.addFavorite(ctx));
 
 // elimina una waifu de la lista de favoritos
 bot.command('removefavorite', async ctx => await Commands.removeFavorite(ctx));
 
 // muestra las imagenesd del listado de favoritos
-bot.command('favoritelist', async ctx => await Commands.favoriteList(ctx)); 
+bot.command('favoritelist', async ctx => await Commands.favoriteList(ctx));
 
 // para crear un intercambio de waifus entre 2 usuarios
-bot.command('tradewaifu', async ctx => await Commands.tradeWaifu(ctx)); 
+bot.command('tradewaifu', async ctx => await Commands.tradeWaifu(ctx));
 
 // muestra la tabla de posiciones del grupo
-bot.command('top', async ctx => await Commands.top(ctx)); 
+bot.command('top', async ctx => await Commands.top(ctx));
 
 // cambia el limite de mensajes necesatios para hacer aparecer a las waifus
-bot.command('changetime', async ctx => await Commands.changeTime(ctx)); 
+bot.command('changetime', async ctx => await Commands.changeTime(ctx));
 
 // muestra el perfil del usuario que lo pide
-bot.command('profile', async ctx => await Commands.profile(ctx)); 
+bot.command('profile', async ctx => await Commands.profile(ctx));
 
 // muesta el listado de franquicias, si se envia un numero se muestra el listado de waifus perteneciente a esa franquicia
 bot.command('franchiselist', async ctx => await Commands.franchiseList(ctx));
@@ -59,7 +58,13 @@ bot.command('changepointstowaifu', async ctx => await Commands.addWaifu(ctx));
 // cambia waifus por puntos
 bot.command('changewaifutopoints', async ctx => await Commands.deleteWaifu(ctx));
 
-bot.command('active', async ctx => await Commands.active(ctx)); 
+// apuesta puntos para obtener mas si se acierta la franquicia de la proxima waifu
+bot.command('bet', async ctx => await Commands.toBet(ctx));
+
+// muestra a todas las apuestas del grupo que estan activas
+bot.command('bets', async ctx => await Commands.allBets(ctx));
+
+bot.command('active', async ctx => await Commands.active(ctx));
 // actions
 
 bot.action('nextPage', ctx => utils.changePage(ctx));
@@ -76,43 +81,43 @@ bot.action('approve', ctx => utils.trade(ctx, true));
 bot.action('decline', ctx => utils.trade(ctx, false));
 
 // hastags 
-  
-bot.hashtag(['yaoiFanBoy', 'fanBoy', 'yaoi'], async ctx => await Hashtags.yaoi(ctx)); 
 
-bot.hashtag(['plusUltra', 'plus'], async ctx => await Hashtags.plus(ctx)); 
+bot.hashtag(['yaoiFanBoy', 'fanBoy', 'yaoi'], async ctx => await Hashtags.yaoi(ctx));
 
-bot.hashtag(['LGBT', 'lgbt'], async ctx => await Hashtags.lgbt(ctx)); 
+bot.hashtag(['plusUltra', 'plus'], async ctx => await Hashtags.plus(ctx));
 
-bot.hashtag('gay', async ctx => await Hashtags.gay(ctx)); 
+bot.hashtag(['LGBT', 'lgbt'], async ctx => await Hashtags.lgbt(ctx));
 
-bot.hashtag(['sape', 'cruz', 'cross'], async ctx => await Hashtags.cross(ctx)); 
+bot.hashtag('gay', async ctx => await Hashtags.gay(ctx));
 
-bot.hashtag(['F', 'f'], async ctx => await Hashtags.respect(ctx)); 
+bot.hashtag(['sape', 'cruz', 'cross'], async ctx => await Hashtags.cross(ctx));
 
-bot.hashtag(['police', 'policia'], async ctx => await Hashtags.police(ctx)); 
+bot.hashtag(['F', 'f'], async ctx => await Hashtags.respect(ctx));
 
-bot.hashtag(['llamarPolicia', 'callPolice'], async ctx => await Hashtags.callPolice(ctx)); 
+bot.hashtag(['police', 'policia'], async ctx => await Hashtags.police(ctx));
 
-bot.hashtag(['FBI', 'fbi'], async ctx => await Hashtags.fbi(ctx)); 
+bot.hashtag(['llamarPolicia', 'callPolice'], async ctx => await Hashtags.callPolice(ctx));
 
-bot.hashtag(['sangradoNasal', 'sangre', 'sangrado', 'blood'], async ctx => await Hashtags.blood(ctx)); 
+bot.hashtag(['FBI', 'fbi'], async ctx => await Hashtags.fbi(ctx));
 
-bot.hashtag(['trap', 'isATrap', 'trapo'], async ctx => await Hashtags.trap(ctx)); 
+bot.hashtag(['sangradoNasal', 'sangre', 'sangrado', 'blood'], async ctx => await Hashtags.blood(ctx));
+
+bot.hashtag(['trap', 'isATrap', 'trapo'], async ctx => await Hashtags.trap(ctx));
 
 bot.hashtag(['licencia', 'licence'], async ctx => await Hashtags.licence(ctx));
 
 bot.hashtag(['chao', 'bye', 'byeBye', 'correr'], async ctx => await Hashtags.bye(ctx));
 
 bot.hashtag(['clorox', 'cloro', 'chlorine'], async ctx => await Hashtags.chlorine(ctx));
-  
-bot.hashtag(['cachetada', 'bofetada', 'bitchSlapt'], async ctx => await Hashtags.bitchSlap(ctx)); 
+
+bot.hashtag(['cachetada', 'bofetada', 'bitchSlapt'], async ctx => await Hashtags.bitchSlap(ctx));
 
 // hears
-bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar moneda'], async ctx => await Hears.coing(ctx)); 
+bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar moneda'], async ctx => await Hears.coing(ctx));
 
-bot.hears(['mamon', 'Mamon'], async ctx => await Hears.mamon(ctx)); 
-  
-bot.hears(['gay', 'marico', 'maricon', 'amarico', 'homosexsual', 'Gay', 'Marico', 'Maricon', 'Amarico', 'Homosexsual'], async ctx => await Hears.toInsult(ctx)); 
+bot.hears(['mamon', 'Mamon'], async ctx => await Hears.mamon(ctx));
+
+bot.hears(['gay', 'marico', 'maricon', 'amarico', 'homosexsual', 'Gay', 'Marico', 'Maricon', 'Amarico', 'Homosexsual'], async ctx => await Hears.toInsult(ctx));
 
 bot.on('message', async ctx => {
   // console.log(ctx.message);

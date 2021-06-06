@@ -4,11 +4,11 @@ const axios = require('../config/axios');
 const start = async ctx => { // hace la llamada para agregar el chat a la bd
   const { chat } = ctx;
   if (chat.type == 'group' || chat.type == 'supergroup') {
-    const response = await axios.post('/chats/add_chat', { chatId: chat.id }); 
+    const response = await axios.post('/chats/add_chat', { chatId: chat.id });
     const { status, data } = response;
 
-    switch(status) {
-      case 200: 
+    switch (status) {
+      case 200:
         ctx.reply(data.message);
         sendWaifu(ctx);
         break;
@@ -48,6 +48,7 @@ Lista de los comandos.
 - /changewaifutopoints cambia waifus repetidas por puntos, debes especificar la waifu que quieres cambiar por puntos y puedes decir la cantidad.
 - /changepointstowaifu cambia puntos por waifus si envias el comando solo es una al azar 5 pts, si mandas el número de la serie 10 pts, si manda el número de la serie y el de la waifu 20 pts.
 - /profile muestra el perfíl de la persona que lo pidio.
+- /bet apuesta una cantidad de puntos (1 - 10) indicando la franquicia, si se acierta la franquicia se ontendra la cantidad apostada por 10, sino ser perderan
 
 Lista de hashtags, estos envian un sticker o un gif.
 - yaoiFanBoy, fanBoy o yaoi.
@@ -71,13 +72,30 @@ Lista de hashtags, estos envian un sticker o un gif.
 
 const protecc = async ctx => { // comando para proteger una waifu que salga
   if (!await utils.verifyGroup(ctx)) return;
-  
+
   const { message } = ctx;
-  const response = await axios.post('/waifus/protecc', { message });
-  if (response.status == 200) {
-    utils.sendMessage(ctx, response.data.message, { reply_to_message_id: message.message_id });
-    const data = await utils.addSpecial.addImageSpecialToList(response.data.extras);
-    if (data) return utils.sendMessage(ctx, `@${message.from.username}, ${data.message}`);
+  const { status, data } = await axios.post('/waifus/protecc', { message });
+  console.log(data);
+  if (status == 200) {
+    utils.sendMessage(ctx, data.message, { reply_to_message_id: message.message_id });
+    const extras = await utils.addSpecial.addImageSpecialToList(data.extras);
+    if (extras) return utils.sendMessage(ctx, `@${message.from.username}, ${extras.message}`);
+    // if (data.bets)
+    if (data.bets) {
+      let messageBets = '';
+      const { winners, losers } = data.bets;
+      if (winners) {
+        messageBets += 'Los ganadores de la apuesta que tuvieron suerte son:\n';
+        messageBets += winners.join('\n');
+        messageBets += '\n\n'
+      }
+      if (losers) {
+        messageBets += 'Los perderores que malgastaron puntos son:\n';
+        messageBets += losers.join(', ');
+        messageBets += ', más suerte para la proxima.'
+      }
+      utils.sendMessage(ctx, messageBets);
+    }
   }
   return;
 };
@@ -101,7 +119,7 @@ const addFavorite = async ctx => { // se agrega una waifu al listado de favorito
     const text = 'Debes enviar el mensaje de la siguiente manera\n/addfavorite <numero de tu lista> <posición deseada>\nEl maximo de personajes depende de tu nivel, el nivel que tienes actualmente lo puedes ver con /profile, cada pagina puede alvergar a 10 personajes';
 
     return await utils.sendMessage(ctx, text, { reply_to_message_id: message.message_id });
-}
+  }
 
   const body = {
     waifuNumber: waifu,
@@ -119,10 +137,10 @@ const removeFavorite = async ctx => { // elimina una waifu del listado de favori
   const { message } = ctx;
   const text = message.text.split(' ');
   const position = text[1];
-  
+
   if (!position || isNaN(parseInt(position)) || position < 1) {
     const text = 'Debe introducir un número valido para que se pueda eliminar a la waifu de la lista';
-    
+
     return utils.sendMessage(ctx, text, { replay_to_message_id: message.message_id });
   }
 
@@ -143,7 +161,7 @@ const favoriteList = async ctx => {
   const page = isNaN(parseInt(message.text.split(' ')[1])) ? 1 : message.text.split(' ')[1];
 
   const { status, data } = await axios.get(`/waifu_list/favorites?chatId=${message.chat.id}&userId=${message.from.id}&page=${page}`);
-  switch(status){
+  switch (status) {
     case 200: return await utils.sendAlbum(ctx, data.waifus, data.totalPages, page);
     case 201: return await utils.sendMessage(ctx, data.message, { reply_to_message_id: message.message_id });
     default: return await utils.sendMessage(ctx, 'Ocurrio un error obteniendo tu listado', { reply_to_message_id: message.message_id });
@@ -156,7 +174,7 @@ const specialList = async ctx => {
   const page = isNaN(parseInt(message.text.split(' ')[1])) ? 1 : message.text.split(' ')[1];
 
   const { status, data } = await axios.get(`/special_image/list?chatId=${message.chat.id}&userId=${message.from.id}&page=${page}`);
-  switch(status) {
+  switch (status) {
     case 200:
       return await utils.sendAlbumSpecial(ctx, data.list, data.totalPages, data.actualPage);
     case 205:
@@ -177,8 +195,8 @@ const tradeWaifu = async ctx => {
     const text = 'Lo siento, la forma del comando es la siguiente /tradewaifu <numero en tu lista> <numero en la lista de quien deseas cambiar>\nDebe ser respondiendo el mensaje de la persona con quien quieres cambiar';
 
     return await utils.sendMessage(ctx, text, { reply_to_message_id: message.message_id });
-  } else if (message.reply_to_message){
-    if(message.reply_to_message.from.is_bot) {
+  } else if (message.reply_to_message) {
+    if (message.reply_to_message.from.is_bot) {
       return await utils.sendMessage(ctx, 'Lo siento, los bots no tienen lista', { reply_to_message_id: message.message_id });
     } else if (message.from.id == message.reply_to_message.from) {
       return await utils.sendMessage(ctx, 'No puedes intercambiar contigo mismo', { reply_to_message_id: message.message_id });
@@ -196,14 +214,14 @@ const tradeWaifu = async ctx => {
       } else return;
     }
   }
-}; 
+};
 
 const top = async ctx => {
   if (!await utils.verifyGroup(ctx)) return;
 
   const { message } = ctx;
   const { status, data } = await axios.get(`/chats/top?chatId=${message.chat.id}`);
-  switch(status) {
+  switch (status) {
     case 200: return await utils.formatedUsers(ctx, data.users);
     case 201: return utils.sendMessage(ctx, 'Parece que nadie tiene una waifu su lista', { reply_to_message_id: message.message_id });
     default: return console.error("ocurrio un error");
@@ -258,7 +276,7 @@ const addWaifu = async ctx => {
   const franchiseNumber = isNaN(parseInt(message.text.split(' ')[1])) ? 0 : parseInt(message.text.split(' ')[1]);
   const waifuNumber = isNaN(parseInt(message.text.split(' ')[2])) ? 0 : parseInt(message.text.split(' ')[2]);
   const body = {
-    userId: message.from.id, 
+    userId: message.from.id,
     chatId: message.chat.id,
     franchiseNumber,
     waifuNumber
@@ -280,7 +298,7 @@ const addWaifu = async ctx => {
       return;
     case 205:
       return ctx.reply(data, { reply_to_message_id: message.message_id });
-    default: return ;
+    default: return;
   }
 }
 
@@ -292,14 +310,14 @@ const deleteWaifu = async ctx => {
   const quantity = isNaN(parseInt(message.text.split(' ')[2])) ? 0 : parseInt(message.text.split(' ')[2]);
 
   const body = {
-    userId: message.from.id, 
+    userId: message.from.id,
     chatId: message.chat.id,
     waifuNumber,
     quantity
   }
 
   const { status, data } = await axios.post('/waifu_list/delete_list', body);
-  switch(status) {
+  switch (status) {
     case 200:
       const text = `Has cambiado a ${data.waifu.name} de ${data.waifu.franchise} por una cantida de ${data.points} ${data.points > 1 ? 'puntos' : 'punto'}. Tienes un total de ${data.profile.points + data.points} ${data.profile.points + data.points > 1 ? 'puntos' : 'punto'}`;
       return ctx.reply(text, { reply_to_message_id: message.message_id });
@@ -308,21 +326,72 @@ const deleteWaifu = async ctx => {
   }
 }
 
+const toBet = async ctx => {
+  if (!await utils.verifyGroup(ctx)) return;
+
+  const { message } = ctx;
+  const franchise = isNaN(parseInt(message.text.split(' ')[1])) ? 0 : parseInt(message.text.split(' ')[1]);
+  const quantity = isNaN(parseInt(message.text.split(' ')[2])) ? 0 : parseInt(message.text.split(' ')[2]);
+  const extras = { reply_to_message_id: message.message_id };
+
+  if (!franchise) return await utils.sendMessage(ctx, 'El comando debe ser enviado de la siguiente forma /tobest (numero de franchicia indicado, puede ver el numero de la franchisia con el comando /franchiselist) (numero de puntos que decea apostar 1 - 10)', extras);
+  if (!quantity || quantity > 10) return await utils.sendMessage(ctx, 'Debe indicar la cantidad de puntos que decea apostar (1 - 10)', extras);
+
+  const body = {
+    chatId: message.chat.id,
+    userId: message.from.id,
+    franchise,
+    quantity
+  };
+
+  const { data } = await axios.post('/bets/create', body);
+  return await utils.sendMessage(ctx, data.message.toString(), extras);
+}
+
+const allBets = async ctx => {
+  if (!await utils.verifyGroup(ctx)) return;
+
+  const { message } = ctx;
+  const { status, data } = await axios.get(`/bets?chat_id=${message.chat.id}`);
+
+  if (status === 200) {
+    if (data.message.length > 0) {
+      const messageFormated = `Las apuestas activas son:\n\n${data.message.join('\n')}`;
+      return utils.sendMessage(ctx, messageFormated, { reply_to_message_id: message.message_id });
+    } else {
+      return utils.sendMessage(ctx, 'No hay apuestas en estos momentos', { reply_to_message_id: message.message_id });
+    }
+  } else {
+    return utils.sendMessage(ctx, 'Ocurrio un error');
+  }
+}
+
 const active = async ctx => {
   if (await utils.verifyGroup(ctx)) return await utils.addCountInChat(ctx);
+  console.log('llegue a esta funcion');
 
-  const waifus = await axios.get('/waifus/active');
-  let message = '';
-  if (waifus.data.length > 0) {
-    message = 'Las waifus activas son:\n';
-    await waifus.data.forEach(waifu => {
-      message += `Nombre: ${waifu.name}, Apodo: ${waifu.nickname}\n`;
-    });
-  } else {
-    message = 'No hay ninguna waifu activa en este momento';
+  try {
+    let message = '';
+    const { status, data } = await axios.get('/waifus/active');
+    if (status === 200) {
+      if (data.length > 0) {
+        message = 'Las waifus activas son:\n';
+        const waifus = await Promise.all(data.map(waifu => {
+          let temp = `${waifu.chat_id}.- Nombre: ${waifu.waifu_name}, Apodo: ${waifu.waifu_nickname || 'No posee apodo'}, Franquicia: ${waifu.franchise_name}.\n`
+          return temp;
+        }));
+        message += waifus.toString();
+      } else {
+        message = 'No hay ninguna waifu activa en este momento';
+      }
+    } else {
+      message = 'Ocurio un error';
+    }
+
+    return utils.sendMessage(ctx, message, { reply_to_message_id: ctx.message.message_id });
+  } catch (error) {
+    console.error(error);
   }
-
-  return utils.sendMessage(ctx, message, { reply_to_message_id: ctx.message.message_id });
 }
 
 module.exports = {
@@ -342,5 +411,7 @@ module.exports = {
   franchiseList,
   addWaifu,
   deleteWaifu,
-  active
+  active,
+  toBet,
+  allBets
 };
