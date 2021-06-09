@@ -49,6 +49,7 @@ Lista de los comandos.
 - /changepointstowaifu cambia puntos por waifus si envias el comando solo es una al azar 5 pts, si mandas el número de la serie 10 pts, si manda el número de la serie y el de la waifu 20 pts.
 - /profile muestra el perfíl de la persona que lo pidio.
 - /bet apuesta una cantidad de puntos (1 - 10) indicando la franquicia, si se acierta la franquicia se ontendra la cantidad apostada por 10, sino ser perderan
+- /bets muestra todas las apuestas que estan activan en el grupo.
 
 Lista de hashtags, estos envian un sticker o un gif.
 - yaoiFanBoy, fanBoy o yaoi.
