@@ -85,12 +85,12 @@ const protecc = async ctx => { // comando para proteger una waifu que salga
     if (data.bets) {
       let messageBets = '';
       const { winners, losers } = data.bets;
-      if (winners) {
+      if (winners.length > 0) {
         messageBets += 'Los ganadores de la apuesta que tuvieron suerte son:\n';
         messageBets += winners.join('\n');
         messageBets += '\n\n'
       }
-      if (losers) {
+      if (losers.length > 0) {
         messageBets += 'Los perderores que malgastaron puntos son:\n';
         messageBets += losers.join(', ');
         messageBets += ', más suerte para la proxima.'
