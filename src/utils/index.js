@@ -9,12 +9,13 @@ const verifyGroup = async (ctx) => {
 
 const sendWaifu = async (ctx) => {
   const { chat, message } = ctx;
-  const franchise = isNaN(parseInt(text.split(" ")[1]))
-    ? 0
-    : parseInt(text.split(" ")[1]);
+  // const franchise = isNaN(parseInt(message.text.split(" ")[1]))
+  //   ? 0
+  //   : parseInt(message.text.split(" ")[1]);
 
   const response = await axios.get(
-    `/waifus/send_waifu?chatId=${chat.id}&ftanchise=${franchise}`
+    // `/waifus/send_waifu?chatId=${chat.id}&ftanchise=${franchise}`
+    `/waifus/send_waifu?chatId=${chat.id}`
   );
 
   if (response.status == 200) {
