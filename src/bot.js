@@ -112,7 +112,27 @@ bot.hashtag(['clorox', 'cloro', 'chlorine'], async ctx => await Hashtags.chlorin
 
 bot.hashtag(['cachetada', 'bofetada', 'bitchSlapt'], async ctx => await Hashtags.bitchSlap(ctx));
 
-bot.hashtag(['marica', 'Marica'], async ctx => await Hashtags.marica(ctx));
+bot.hashtag(['marica', 'Marica'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642944737/Waifu%20List%20Bot%20Telegram%20Videos/video_2022-01-23_09-31-45_glj8kr.mp4']));
+
+bot.hashtag(['bienHecho', 'BienHecho'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642945669/Waifu%20List%20Bot%20Telegram%20Videos/y2mate.com_-_Meme_Gohan_bien_hecho_Dragon_Ball_Z_480p_ut3way.mp4']));
+
+bot.hashtag(['seMamo', 'SeMamo', 'cmamo', 'cMamo', 'CMamo'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642945804/Waifu%20List%20Bot%20Telegram%20Videos/y2mate.com_-_Robot_chido_dice_jaja_c_mamo_360p_a6jo5f.mp4']));
+
+bot.hashtag(['viejaSabrosa', 'ViejaSabrosa'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642945966/Waifu%20List%20Bot%20Telegram%20Videos/video_2021-07-15_14-57-30_dptudk.mp4']));
+
+bot.hashtag(['viejoSabroso', 'ViejoSabroso'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642946104/Waifu%20List%20Bot%20Telegram%20Videos/videoplayback_sacoib.mp4']));
+
+bot.hashtag(['terror', 'Terror', 'tengoMiedo', 'TengoMiedo'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642948000/Waifu%20List%20Bot%20Telegram%20Videos/Y2Mate_is_en_ese_momento_cell_sintio_el_verdadero_terror_RaLI5iTdoXc_sykn79.mp4']));
+
+bot.hashtag(['solYSexo', 'SolYSexo'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642948125/Waifu%20List%20Bot%20Telegram%20Videos/Y2Mate_is_Ed__Edd_y_Eddy_Mi_carne_me_pide_sol_y_s3x0_Latino_56Q7jq1UmMc_u2i2lr.mp4']));
+
+bot.hashtag(['soyBarbaro', 'SoyBarbaro'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642950322/Waifu%20List%20Bot%20Telegram%20Videos/y2mate.com_-_Escena_del_meme_nombre_a_veces_soy_una_cosa_pero_b%C3%A1rbara_KND_Los_chicos_del_barrio_360p_igrewh.mp4']));
+
+bot.hashtag(['adios', 'adiosAmigo', 'meVoy', 'Adios', 'AdiosAmigo', 'MeVoy'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642950787/Waifu%20List%20Bot%20Telegram%20Videos/Adios_Amigou_zwxb8p.mp4']));
+
+bot.hashtag(['antojaron', 'Antojaron'], async ctx => await Hashtags.sendVideoMeme(ctx, ['https://res.cloudinary.com/jdgn94/video/upload/v1642950904/Waifu%20List%20Bot%20Telegram%20Videos/y2mate_com_ya_antojaron_meme_goku_full_HD_sin_marca_de_agua_360p_ahx9ml.mp4']));
+
+// bot.hashtag([], async ctx => await Hashtags.sendVideoMeme(ctx, []));
 
 // hears
 bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar moneda'], async ctx => await Hears.coing(ctx));
