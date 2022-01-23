@@ -158,6 +158,12 @@ const bitchSlap = async ctx => {
   return sendAnimationLink(ctx, gifs);
 };
 
+const marica = async ctx => {
+  const video = ['https://res.cloudinary.com/jdgn94/video/upload/v1642944737/Waifu%20List%20Bot%20Telegram%20Videos/video_2022-01-23_09-31-45_glj8kr.mp4'];
+
+  return sendAnimationLink(ctx, video);
+}
+
 module.exports = {
   yaoi,
   plus,
@@ -174,4 +180,5 @@ module.exports = {
   bye,
   chlorine,
   bitchSlap,
+  marica,
 }

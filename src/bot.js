@@ -112,6 +112,8 @@ bot.hashtag(['clorox', 'cloro', 'chlorine'], async ctx => await Hashtags.chlorin
 
 bot.hashtag(['cachetada', 'bofetada', 'bitchSlapt'], async ctx => await Hashtags.bitchSlap(ctx));
 
+bot.hashtag(['marica', 'Marica'], async ctx => await Hashtags.marica(ctx));
+
 // hears
 bot.hears(['lanzar una moneda', 'lanzar moneda', 'Lanzar una moneda', 'Lanzar moneda'], async ctx => await Hears.coing(ctx));
 
