@@ -1,5 +1,5 @@
 Arguments: 
-  /home/juan/.nvm/versions/node/v16.18.0/bin/node /home/juan/.nvm/versions/node/v16.18.0/bin/yarn add -D @types/server-static
+  /home/juan/.nvm/versions/node/v16.18.0/bin/node /home/juan/.nvm/versions/node/v16.18.0/bin/yarn add -D @types/telegraf
 
 PATH: 
   /home/juan/.nvm/versions/node/v16.18.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/juan/Android/Sdk/emulator:/home/juan/Android/Sdk/platform-tools:/home/juan/Android/Sdk/cmdline-tools/latest/bin:/opt/android-studio/jre/bin:/home/juan/.development/flutter/bin:/usr/local/go/bin
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fserver-static: Not found
+  Error: https://registry.yarnpkg.com/@types%2ftelegraf: Not found
       at Request.params.callback [as _callback] (/home/juan/.nvm/versions/node/v16.18.0/lib/node_modules/yarn/lib/cli.js:66145:18)
       at Request.self.callback (/home/juan/.nvm/versions/node/v16.18.0/lib/node_modules/yarn/lib/cli.js:140890:22)
       at Request.emit (node:events:513:28)
@@ -29,14 +29,14 @@ Trace:
 npm manifest: 
   {
     "name": "waifulistbot",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "",
     "main": "bot.js",
     "scripts": {
       "start": "cross-env NODE_ENV=production node src/index.js",
       "dev": "cross-env NODE_ENV=development nodemon src/index.js"
     },
-    "keywords": [],
+    "keywords": [ ],
     "author": "",
     "license": "ISC",
     "dependencies": {
@@ -65,6 +65,7 @@ npm manifest:
       "@types/jsonwebtoken": "^9.0.0",
       "@types/morgan": "^1.9.4",
       "@types/multer": "^1.4.7",
+      "@types/uuid": "^9.0.0",
       "nodemon": "^2.0.20",
       "ts-node-dev": "^2.0.0",
       "typescript": "^4.9.4"
@@ -268,6 +269,11 @@ Lockfile:
     version "0.0.30"
     resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
     integrity sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==
+  
+  "@types/uuid@^9.0.0":
+    version "9.0.0"
+    resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.0.tgz#53ef263e5239728b56096b0a869595135b7952d2"
+    integrity sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==
   
   "@types/validator@^13.7.1":
     version "13.7.10"
