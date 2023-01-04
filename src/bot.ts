@@ -1,9 +1,21 @@
 if (process.env.NODE_ENV == "development") require("dotenv").config();
 import { Telegraf } from "telegraf";
-// import axios from "./config/axios";
+
+import i18n from "./config/i18n";
+import { getLanguage } from "./bot/utils/generic";
 
 const bot = new Telegraf(process.env.TOKEN_TG ?? ""); // poner el tocken en una variable de entorno
 // const telegram = new Telegram(process.env.TOKEN_TG)
+
+// Middleware
+bot.use(async (ctx, next) => {
+  const language = await getLanguage(ctx);
+  i18n.setLocale(language ?? "en");
+
+  await next();
+
+  console.log("estoy despues de ejecutar la funcion principal?");
+});
 
 // Init
 bot.start(async (ctx) => {
@@ -28,6 +40,7 @@ bot.start(async (ctx) => {
       "Hola, si quieres que me ponga a trabajar agregame a tu grupo y usa el comando /start para que disfrutar del juego "
     );
   }
+  console.log("termine la funcion principal");
 });
 
 // comands

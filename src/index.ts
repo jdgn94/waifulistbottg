@@ -1,9 +1,11 @@
 import api from "./api";
 import bot from "./bot";
 import db from "./db/models";
+import Seeds from "./db/seeds";
 
 const main = async (): Promise<void> => {
   try {
+    const seeds = new Seeds();
     const port = api.get("port");
     api.listen(port);
     global.logger.info(`server on port ${port}`);
@@ -13,6 +15,7 @@ const main = async (): Promise<void> => {
     global.logger.info(`database sync`);
     bot.launch();
     global.logger.info(`api connected`);
+    await seeds.run();
   } catch (error) {
     console.error(error);
     global.logger.error(error);

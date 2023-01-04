@@ -1,11 +1,4 @@
-import {
-  CreationOptional,
-  DataTypes,
-  Model,
-  Optional,
-  literal,
-} from "sequelize";
-// import { Fn } from "sequelize/types/utils";
+import { CreationOptional, DataTypes, Model, Optional } from "sequelize";
 
 import db from "../config";
 
@@ -44,14 +37,10 @@ WaifuRarity.init(
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
-      defaultValue: literal("CURRENT_TIMESTAMP()"),
     },
     updatedAt: {
       allowNull: false,
       type: DataTypes.DATE,
-      defaultValue: literal(
-        "CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()"
-      ),
     },
   },
   {

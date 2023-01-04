@@ -1,3 +1,6 @@
+import { Transaction } from "sequelize";
+import Events, { EventAttributes } from "../models/event";
+
 const events: EventAttributes[] = [
   {
     id: 1,
@@ -60,3 +63,25 @@ const events: EventAttributes[] = [
     updatedAt: new Date(),
   },
 ];
+
+const createEvents = async (t: Transaction): Promise<void> => {
+  try {
+    let eventsToInsert: EventAttributes[] = [];
+
+    await Promise.all(
+      events.map(async (event) => {
+        const eventInsert = await Events.findByPk(event.id);
+        if (!eventInsert) {
+          eventsToInsert.push(event);
+        }
+      })
+    );
+
+    await Events.bulkCreate(eventsToInsert, { transaction: t });
+
+    global.logger.info(`Inserted events ${eventsToInsert.length} news`);
+    return;
+  } catch (error) {}
+};
+
+export { createEvents };

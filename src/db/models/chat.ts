@@ -1,11 +1,4 @@
-import {
-  CreationOptional,
-  DataTypes,
-  Model,
-  Optional,
-  literal,
-} from "sequelize";
-// import { Fn } from "sequelize/types/utils";
+import { CreationOptional, DataTypes, Model, Optional } from "sequelize";
 
 import db from "../config";
 
@@ -14,6 +7,7 @@ export type ChatAttributes = {
   chatIdTg: string;
   messageLimit: number;
   messageQuantity: number;
+  language: "en" | "es";
   createdAt: Date;
   updatedAt: Date;
 };
@@ -25,6 +19,7 @@ class Chat extends Model<ChatAttributes, ChatCreationAttributes> {
   declare chatIdTg: string;
   declare messageLimit: number;
   declare messageQuantity: number;
+  declare language: "en" | "es";
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -43,25 +38,25 @@ Chat.init(
       unique: true,
     },
     messageLimit: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
       defaultValue: 100,
     },
     messageQuantity: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED,
       defaultValue: 0,
+    },
+    language: {
+      type: DataTypes.STRING,
+      defaultValue: "en",
     },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
-      defaultValue: literal("CURRENT_TIMESTAMP()"),
     },
     updatedAt: {
       allowNull: false,
       type: DataTypes.DATE,
-      defaultValue: literal(
-        "CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()"
-      ),
     },
   },
   {
