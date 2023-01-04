@@ -6,6 +6,7 @@ export type WaifuListAttributes = {
   id: number;
   userId: number;
   quantity: number;
+  waifuId: number;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -19,6 +20,7 @@ class WaifuList extends Model<
   declare id: CreationOptional<number>;
   declare userId: number;
   declare quantity: number;
+  declare waifuId: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -34,7 +36,6 @@ WaifuList.init(
     userId: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
-      unique: true,
       references: {
         model: "users",
         key: "id",
@@ -42,6 +43,14 @@ WaifuList.init(
     },
     quantity: {
       type: DataTypes.INTEGER,
+    },
+    waifuId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      references: {
+        model: "waifus",
+        key: "id",
+      },
     },
     createdAt: {
       allowNull: false,

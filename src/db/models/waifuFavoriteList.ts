@@ -10,7 +10,7 @@ export type WaifuFavoriteListAttributes = {
   updatedAt: Date;
 };
 
-type WaifuFavoriteListCreationAttributes = Optional<
+export type WaifuFavoriteListCreationAttributes = Optional<
   WaifuFavoriteListAttributes,
   "id"
 >;

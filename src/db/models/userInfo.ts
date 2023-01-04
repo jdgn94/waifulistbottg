@@ -5,22 +5,21 @@ import db from "../config";
 export type UserInfoAttributes = {
   id: number;
   userId: number;
-  chatId: number;
   level: number;
   points: number;
-  exp: boolean;
-  limitExp: boolean;
+  exp: number;
+  limitExp: number;
   favoritePages: number;
   favoritePagePurchases: number;
   expMulti: number;
-  expMultiExpire: Date;
+  expMultiExpire?: Date | null;
   totalBets: number;
   totalBetsWon: number;
   totalBetsLost: number;
   totalBetsPoints: number;
   totalBetsPointsWon: number;
   jail: boolean;
-  jailExpire: Date;
+  jailExpire?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -30,22 +29,21 @@ type UserInfoCreationAttributes = Optional<UserInfoAttributes, "id">;
 class UserInfo extends Model<UserInfoAttributes, UserInfoCreationAttributes> {
   declare id: CreationOptional<number>;
   declare userId: number;
-  declare chatId: number;
   declare level: number;
   declare points: number;
-  declare exp: boolean;
-  declare limitExp: boolean;
+  declare exp: number;
+  declare limitExp: number;
   declare favoritePages: number;
   declare favoritePagePurchases: number;
   declare expMulti: number;
-  declare expMultiExpire: Date;
+  declare expMultiExpire?: Date | null;
   declare totalBets: number;
   declare totalBetsWon: number;
   declare totalBetsLost: number;
   declare totalBetsPoints: number;
   declare totalBetsPointsWon: number;
   declare jail: boolean;
-  declare jailExpire: Date;
+  declare jailExpire?: Date | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -63,14 +61,6 @@ UserInfo.init(
       allowNull: false,
       references: {
         model: "users",
-        key: "id",
-      },
-    },
-    chatId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-      references: {
-        model: "chats",
         key: "id",
       },
     },
@@ -110,7 +100,6 @@ UserInfo.init(
     },
     expMultiExpire: {
       type: DataTypes.DATE,
-      allowNull: false,
     },
     totalBets: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -144,7 +133,6 @@ UserInfo.init(
     },
     jailExpire: {
       type: DataTypes.DATE,
-      allowNull: false,
     },
     createdAt: {
       allowNull: false,

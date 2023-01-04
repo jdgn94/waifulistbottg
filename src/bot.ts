@@ -1,8 +1,8 @@
 if (process.env.NODE_ENV == "development") require("dotenv").config();
-import { Telegraf } from "telegraf";
+import { Telegraf, Markup } from "telegraf";
 
 import i18n from "./config/i18n";
-import { getLanguage } from "./bot/utils/generic";
+import { getLanguage, addMessageCount } from "./bot/utils/generic";
 
 const bot = new Telegraf(process.env.TOKEN_TG ?? ""); // poner el tocken en una variable de entorno
 // const telegram = new Telegram(process.env.TOKEN_TG)
@@ -12,10 +12,13 @@ bot.use(async (ctx, next) => {
   const language = await getLanguage(ctx);
   i18n.setLocale(language ?? "en");
 
+  await addMessageCount(ctx);
   await next();
 
   console.log("estoy despues de ejecutar la funcion principal?");
 });
+
+// keyboard button
 
 // Init
 bot.start(async (ctx) => {
@@ -37,7 +40,12 @@ bot.start(async (ctx) => {
     // }
   } else {
     ctx.reply(
-      "Hola, si quieres que me ponga a trabajar agregame a tu grupo y usa el comando /start para que disfrutar del juego "
+      "Hola, si quieres que me ponga a trabajar agregame a tu grupo y usa el comando /start para que disfrutar del juego ",
+      Markup.keyboard([
+        ["button 1", "button 2"],
+        ["button 3", "button 4"],
+        ["button 5", "button 6", "button 7"],
+      ]).resize()
     );
   }
   console.log("termine la funcion principal");

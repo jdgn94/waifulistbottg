@@ -13,13 +13,21 @@ const getLanguage = async (ctx: Context) => {
 
     if (chatId) {
       const chat = await getByTgId(chatId.toString());
-      console.log(chat);
+      // console.log(chat);
       return chat.language;
     }
     return;
   } catch (error) {
     throw error;
   }
+};
+
+const addMessageCount = async (ctx: Context) => {
+  console.log(
+    "Estoy en la funcion para agrega incrementar el contador en el chat",
+    ctx
+  );
+  return;
 };
 
 const createChat = async (id: string) => {
@@ -45,4 +53,4 @@ const createChat = async (id: string) => {
   }
 };
 
-export { getLanguage, createChat };
+export { getLanguage, createChat, addMessageCount };
