@@ -23,7 +23,7 @@ const addCountToChat = async (ctx: Context) => {
 
     let newMessageQuantity = chat.messageQuantity + 1;
     if (newMessageQuantity >= chat.messageLimit) {
-      newMessageQuantity == 0;
+      newMessageQuantity = 0;
     }
 
     await chat.update(

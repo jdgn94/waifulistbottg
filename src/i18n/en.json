@@ -13,5 +13,29 @@
 	"back": "Back",
 	"waufuSender": "Add them to your harem by sending /protecc character name",
 	"errorSendWaifu": "Error to send waifu.",
-	"commandOnlyOnGroup": "Sorry, this command only works in groups."
+	"noWaifuMatch": {
+		"one": "Sorry 😢, not his name, fast %s tries left.",
+		"other": "Sorry 😢, not his name, %s attempts left."
+	},
+	"waifuScape": "Oh no, this waifus has runner crying.",
+	"waifuProtecc": "Good, %s have protecc to %s from %s.",
+	"waifuProteccAge": {
+		"zero": "Do you know how old he is?",
+		"one": "You're catching a minor, someone call the police.",
+		"two": "You're catching an almost legal minor, someone call the police.",
+		"three": "You're catching a legit, there's nothing weird around here",
+		"other": "You're catching a legit, I didn't know you liked the majors"
+	},
+	"waifuProteccType": {
+		"zero": "Look at the size of those oppais.",
+		"one": "How does she endure those mountains?",
+		"two": "I like that size.",
+		"three": "I will not say anything.",
+		"other": ""
+	},
+	"waifuExpWon": "You have won %s points to experience.",
+	"levelUp": "🎊🎉 You have level up to %s",
+	"wonFavoritePage": "and got a favorites page for a total of %s",
+	"commandOnlyOnGroup": "Sorry, this command only works in groups.",
+	"reportToPolice": "📞 Report to Police 🚨."
 }

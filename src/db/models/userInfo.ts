@@ -24,7 +24,25 @@ export type UserInfoAttributes = {
   updatedAt: Date;
 };
 
-type UserInfoCreationAttributes = Optional<UserInfoAttributes, "id">;
+type UserInfoCreationAttributes = Optional<
+  UserInfoAttributes,
+  | "id"
+  | "level"
+  | "points"
+  | "exp"
+  | "limitExp"
+  | "favoritePages"
+  | "favoritePagePurchases"
+  | "expMulti"
+  | "expMultiExpire"
+  | "totalBets"
+  | "totalBetsWon"
+  | "totalBetsLost"
+  | "totalBetsPoints"
+  | "totalBetsPointsWon"
+  | "jail"
+  | "jailExpire"
+>;
 
 class UserInfo extends Model<UserInfoAttributes, UserInfoCreationAttributes> {
   declare id: CreationOptional<number>;
@@ -95,8 +113,9 @@ UserInfo.init(
       defaultValue: 0,
     },
     expMulti: {
-      type: DataTypes.DATE,
+      type: DataTypes.FLOAT.UNSIGNED,
       allowNull: false,
+      defaultValue: 1.0,
     },
     expMultiExpire: {
       type: DataTypes.DATE,

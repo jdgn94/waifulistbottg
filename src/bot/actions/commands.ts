@@ -1,8 +1,9 @@
-import { Context } from "telegraf";
+import { Context, Markup } from "telegraf";
 
 import i18n from "../../config/i18n";
 import menuButton from "../utils/menuButtons";
 import waifusController from "../../controllers/waifusController";
+import activeController from "../../controllers/activeController";
 import {
   chatIsGroup,
   createChantAndUser,
@@ -10,6 +11,7 @@ import {
   sendWaifu,
   commandOnlyOnGroup,
 } from "../utils/generic";
+import userController from "../../controllers/userController";
 
 const start = async (ctx: Context) => {
   try {
@@ -28,7 +30,7 @@ const start = async (ctx: Context) => {
       }
 
       ctx.reply(i18n.__("initGroupNew"));
-      sendWaifu(ctx);
+      await sendWaifu(ctx);
       return;
     } else {
       const successCreate = await createChantAndUser(ctx);
@@ -52,7 +54,7 @@ const protecc = async (ctx: Context) => {
 
     const { chat, message } = ctx;
 
-    if (!chat || !message) throw "chat or message is required";
+    if (!chat || !message || !ctx.message) throw "chat or message is required";
 
     if ("text" in message) {
       const text = message.text;
@@ -61,7 +63,33 @@ const protecc = async (ctx: Context) => {
         text
       );
 
-      if (!waifuActive.captured) return ctx.reply("no waifu name");
+      if (!waifuActive.captured) {
+        const remainingAttemptsQuantity =
+          await activeController.updateAttemptStatus(chat.id.toString());
+        return ctx.reply(
+          remainingAttemptsQuantity <= 0
+            ? i18n.__("waifuScape")
+            : i18n.__n("noWaifuMatch", remainingAttemptsQuantity)
+        );
+      }
+      await userController.getUserInfo(ctx);
+
+      const result = await activeController.assingWaifu(
+        chat.id.toString(),
+        ctx.message?.from.id.toString()
+      );
+      console.log({ result });
+
+      return ctx.reply(
+        result.message,
+        Markup.inlineKeyboard([
+          Markup.button.callback(
+            i18n.__("reportToPolice"),
+            "reporter",
+            !result.sendButtonReport
+          ),
+        ])
+      );
     }
     return;
   } catch (error) {
@@ -70,7 +98,12 @@ const protecc = async (ctx: Context) => {
   }
 };
 
+const span = async (ctx: Context) => {
+  await sendWaifu(ctx);
+};
+
 export default {
   start,
   protecc,
+  span,
 };

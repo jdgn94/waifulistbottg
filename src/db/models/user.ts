@@ -1,6 +1,14 @@
-import { CreationOptional, DataTypes, Model, Optional } from "sequelize";
+import {
+  CreationOptional,
+  DataTypes,
+  Model,
+  Optional,
+  HasManyGetAssociationsMixin,
+  Association,
+} from "sequelize";
 
 import db from "../config";
+import UserInfo from "./userInfo";
 
 export type UserAttributes = {
   id: number;
@@ -18,6 +26,12 @@ class User extends Model<UserAttributes, UserCreationAttributes> {
   declare nickname: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare getUserInfo: HasManyGetAssociationsMixin<UserInfo>;
+
+  public declare static associations: {
+    userInfo: Association<User, UserInfo>;
+  };
 }
 
 User.init(
@@ -51,5 +65,11 @@ User.init(
     sequelize: db,
   }
 );
+
+User.hasMany(UserInfo, {
+  sourceKey: "id",
+  foreignKey: "userId",
+  as: "userInfo",
+});
 
 export default User;

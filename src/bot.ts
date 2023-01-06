@@ -42,10 +42,12 @@ bot.hears(["🔙 Back", "🔙 Atrás"], (ctx) => hears.back(ctx));
 bot.action("en", (ctx) => actions.changeLanguage(ctx, "en"));
 bot.action("es", (ctx) => actions.changeLanguage(ctx, "es"));
 
-// comands
+// commands
 bot.command(["protecc", "proteger", "proteccion", "protección"], (ctx) =>
   commands.protecc(ctx)
 );
+
+bot.command("span", (ctx) => commands.span(ctx));
 
 // bot.command("span", async (ctx) => {
 //   // lanza una waifu para hacer pruebas

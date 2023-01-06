@@ -5,22 +5,25 @@ import db from "../config";
 export type WaifuListAttributes = {
   id: number;
   userId: number;
-  quantity: number;
   waifuId: number;
+  quantity: number;
   createdAt: Date;
   updatedAt: Date;
 };
 
-type WaifuListCreationAttributes = Optional<WaifuListAttributes, "id">;
+export type WaifuListCreationAttributes = Optional<
+  WaifuListAttributes,
+  "id" | "quantity"
+>;
 
 class WaifuList extends Model<
   WaifuListAttributes,
   WaifuListCreationAttributes
 > {
-  declare id: CreationOptional<number>;
+  declare id?: CreationOptional<number>;
   declare userId: number;
-  declare quantity: number;
   declare waifuId: number;
+  declare quantity: CreationOptional<number>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -41,9 +44,6 @@ WaifuList.init(
         key: "id",
       },
     },
-    quantity: {
-      type: DataTypes.INTEGER,
-    },
     waifuId: {
       type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
@@ -51,6 +51,10 @@ WaifuList.init(
         model: "waifus",
         key: "id",
       },
+    },
+    quantity: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 1,
     },
     createdAt: {
       allowNull: false,

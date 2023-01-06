@@ -2,13 +2,16 @@ import {
   Association,
   CreationOptional,
   DataTypes,
-  HasManyGetAssociationsMixin,
+  HasOneGetAssociationMixin,
   Model,
   Optional,
 } from "sequelize";
 
 import db from "../config";
 import WaifuType from "./waifuType";
+import Franchise from "./franchise";
+import Event from "./event";
+import WaifuRarity from "./waifuRarity";
 
 export type WaifuAttributes = {
   id: number;
@@ -61,10 +64,16 @@ class Waifu extends Model<WaifuAttributes, WaifuCreationAttributes> {
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
-  declare getWaifuType: HasManyGetAssociationsMixin<WaifuType>;
+  declare getWaifuType: HasOneGetAssociationMixin<WaifuType>;
+  declare getFranchise: HasOneGetAssociationMixin<Franchise>;
+  declare getEvent: HasOneGetAssociationMixin<Event>;
+  declare getRarity: HasOneGetAssociationMixin<WaifuRarity>;
 
   declare static associations: {
     waifuType: Association<Waifu, WaifuType>;
+    franchise: Association<Waifu, Franchise>;
+    event: Association<Waifu, Event>;
+    rarity: Association<Waifu, WaifuRarity>;
   };
 }
 
@@ -160,6 +169,24 @@ Waifu.hasOne(WaifuType, {
   sourceKey: "waifuTypeId",
   foreignKey: "id",
   as: "waifuType",
+});
+
+Waifu.hasOne(Franchise, {
+  sourceKey: "franchiseId",
+  foreignKey: "id",
+  as: "franchise",
+});
+
+Waifu.hasOne(Event, {
+  sourceKey: "eventId",
+  foreignKey: "id",
+  as: "event",
+});
+
+Waifu.hasOne(WaifuRarity, {
+  sourceKey: "rarityId",
+  foreignKey: "id",
+  as: "rarity",
 });
 
 export default Waifu;

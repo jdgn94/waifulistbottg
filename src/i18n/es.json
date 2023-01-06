@@ -13,6 +13,30 @@
 	"back": "Atrás",
 	"waufuSender": "Agréguelos a su harén enviando /proteger nombre de personaje",
 	"errorSendWaifu": "Error al enviar personaje.",
-	"commandOnlyOnGroup": "Ups, este comando solo es valido en grupos."
-
+	"noWaifuMatch": {
+		"one": "Ups 😢, ese no es su nombre, rápido queda 1 intento.",
+		"other": "Ups 😢, ese no es su nombre, quedan %s intentos."
+	},
+	"waifuScape": "Oh no, esta waifu ha corrido llorando.",
+	"waifuProtecc": "Bien, %s has protegido a %s de %s.",
+	"waifuProteccAge": {
+		"zero": "¿Acaso sabes la edad que tiene?",
+		"one": "Estás atrapando a una menor, alguien llame a la policía.",
+		"two": "Estás atrapando a una menor casi legal, que alguien llame a la policía.",
+		"three": "Estás atrapando a una legal, no hay nada raro por aquí.",
+		"other": "Estas atrapando a una legal, no sabia que te gustaban las mayores."
+	},
+	"waifuProteccType": {
+		"zero": "Mira el tamaño de esas oppais.",
+		"one": "¿Cómo es que ella soporta esas montañas?",
+		"two": "Ese tamaño si me agrada.",
+		"three": "No dire nada.",
+		"other": ""
+	},
+	"waifuExpWon": "Has ganado %s puntos de experiencia.",
+	"levelUp": "🎊🎉 Has subido de nivel %s",
+	"wonFavoritePage": "y has ganado una pagina de favoritos para un total de %s",
+	"commandOnlyOnGroup": "Ups, este comando solo es valido en grupos.",
+	"reportToPolice": "📞 Reporta con la Policía 🚨.",
+	"reportPolice": "reportPolice"
 }
