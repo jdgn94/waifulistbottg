@@ -11,7 +11,7 @@ const development = {
   port: process.env.PORT_DB || 3306,
   seederStorage: "sequelize",
   seederStorageTableName: "SequelizeSeeds",
-  logging: false,
+  logging: true,
   timezone: "-04:00",
   dialectOptions: {
     connectTimeout: 60000,

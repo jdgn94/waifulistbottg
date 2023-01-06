@@ -1,1 +1,18 @@
-{}
+{
+	"initGroupNew": "Genial, el chat se ha registrado satisfactoriamente, que empiece el juego, aquí va la primera waifu.",
+	"initGroupExist": "Ya se ha iniciado el bot en este grupo.",
+	"initGroupError": "Error al buscar información del chat.",
+	"initPrivate": "Hola %s, aquí podrás ver todo tu harén y gastar tus puntos en la tienda.",
+	"unexpectedError": "Error inesperado.",
+	"settings": "Configuraciones",
+	"changeLanguage": "Cambiar Idioma",
+	"en": "Ingles.",
+	"es": "Español.",
+	"languageChanged": "Idioma Cambiado.",
+	"changeLanguageError": "Error al cambiar idioma.",
+	"back": "Atrás",
+	"waufuSender": "Agréguelos a su harén enviando /proteger nombre de personaje",
+	"errorSendWaifu": "Error al enviar personaje.",
+	"commandOnlyOnGroup": "Ups, este comando solo es valido en grupos."
+
+}

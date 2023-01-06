@@ -1,6 +1,14 @@
-import { CreationOptional, DataTypes, Model, Optional } from "sequelize";
+import {
+  Association,
+  CreationOptional,
+  DataTypes,
+  HasManyGetAssociationsMixin,
+  Model,
+  Optional,
+} from "sequelize";
 
 import db from "../config";
+import WaifuType from "./waifuType";
 
 export type WaifuAttributes = {
   id: number;
@@ -52,6 +60,12 @@ class Waifu extends Model<WaifuAttributes, WaifuCreationAttributes> {
   declare eventId: CreationOptional<number>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare getWaifuType: HasManyGetAssociationsMixin<WaifuType>;
+
+  declare static associations: {
+    waifuType: Association<Waifu, WaifuType>;
+  };
 }
 
 Waifu.init(
@@ -141,5 +155,11 @@ Waifu.init(
     sequelize: db,
   }
 );
+
+Waifu.hasOne(WaifuType, {
+  sourceKey: "waifuTypeId",
+  foreignKey: "id",
+  as: "waifuType",
+});
 
 export default Waifu;

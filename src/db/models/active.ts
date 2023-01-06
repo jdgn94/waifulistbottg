@@ -3,21 +3,21 @@ import { CreationOptional, DataTypes, Model, Optional } from "sequelize";
 import db from "../config";
 
 export type ActiveAttributes = {
-  id: number;
+  id?: number;
   chatId: number;
   waifuId: number;
-  attempts: number;
+  attempts?: number;
   createdAt: Date;
   updatedAt: Date;
 };
 
-type ActiveCreationAttributes = Optional<ActiveAttributes, "id">;
+type ActiveCreationAttributes = Optional<ActiveAttributes, "id" & "attempts">;
 
 class Active extends Model<ActiveAttributes, ActiveCreationAttributes> {
   declare id: CreationOptional<number>;
   declare chatId: number;
   declare waifuId: number;
-  declare attempts: number;
+  declare attempts: CreationOptional<number>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -50,6 +50,7 @@ Active.init(
     },
     attempts: {
       type: DataTypes.INTEGER,
+      defaultValue: 10,
       allowNull: false,
     },
     createdAt: {

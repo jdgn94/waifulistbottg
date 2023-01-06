@@ -1,1 +1,17 @@
-{}
+{
+	"initGroupNew": "Great, the chat has been successfully registered, let the game begin, here is the first waifu",
+	"initGroupExist": "The bot has already been started in this group.",
+	"initGroupError": "Error to search info chat.",
+	"initPrivate": "Hello %s, here you can see your harem and spend your points in the store.",
+	"unexpectedError": "Unexpected error.",
+	"settings": "Settings",
+	"changeLanguage": "Change Language",
+	"en": "English.",
+	"es": "Spanish.",
+	"languageChanged": "Language Changed.",
+	"changeLanguageError": "Error to change language.",
+	"back": "Back",
+	"waufuSender": "Add them to your harem by sending /protecc character name",
+	"errorSendWaifu": "Error to send waifu.",
+	"commandOnlyOnGroup": "Sorry, this command only works in groups."
+}

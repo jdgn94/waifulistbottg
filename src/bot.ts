@@ -1,75 +1,70 @@
 if (process.env.NODE_ENV == "development") require("dotenv").config();
-import { Telegraf, Markup } from "telegraf";
+import { Telegraf } from "telegraf";
 
 import i18n from "./config/i18n";
+import commands from "./bot/actions/commands";
+import hears from "./bot/actions/hears";
+import actions from "./bot/actions/actions";
 import { getLanguage, addMessageCount } from "./bot/utils/generic";
 
 const bot = new Telegraf(process.env.TOKEN_TG ?? ""); // poner el tocken en una variable de entorno
-// const telegram = new Telegram(process.env.TOKEN_TG)
 
 // Middleware
 bot.use(async (ctx, next) => {
-  const language = await getLanguage(ctx);
-  i18n.setLocale(language ?? "en");
+  console.log("hola");
+  try {
+    const language = await getLanguage(ctx);
+    i18n.setLocale(language ?? "en");
 
-  await addMessageCount(ctx);
-  await next();
-
-  console.log("estoy despues de ejecutar la funcion principal?");
-});
-
-// keyboard button
-
-// Init
-bot.start(async (ctx) => {
-  // hace la llamada para agregar el chat a la bd
-  const { chat } = ctx;
-  if (chat.type == "group" || chat.type == "supergroup") {
-    // const response = await axios.post("/chats/add_chat", { chatId: chat.id });
-    // const { status, data } = response;
-    // switch (status) {
-    //   case 200:
-    //     ctx.reply(data.message);
-    //     sendWaifu(ctx);
-    //     break;
-    //   case 201:
-    //     ctx.reply(data.message);
-    //     break;
-    //   default:
-    //     ctx.reply(response.response.data.message);
-    // }
-  } else {
-    ctx.reply(
-      "Hola, si quieres que me ponga a trabajar agregame a tu grupo y usa el comando /start para que disfrutar del juego ",
-      Markup.keyboard([
-        ["button 1", "button 2"],
-        ["button 3", "button 4"],
-        ["button 5", "button 6", "button 7"],
-      ]).resize()
-    );
+    await addMessageCount(ctx);
+    await next();
+  } catch (error) {
+    global.logger.error(error);
   }
-  console.log("termine la funcion principal");
 });
+
+// start
+bot.start((ctx) => commands.start(ctx));
+
+// menu
+// -- main menu
+bot.hears(["⚙️ Settings", "⚙️ Configuraciones"], (ctx) => hears.settings(ctx));
+
+// -- settings menu
+bot.hears(["💬 Change Language", "💬 Cambiar Idioma"], (ctx) =>
+  hears.changeLanguage(ctx)
+);
+
+// -- back menu
+bot.hears(["🔙 Back", "🔙 Atrás"], (ctx) => hears.back(ctx));
+
+// actions
+bot.action("en", (ctx) => actions.changeLanguage(ctx, "en"));
+bot.action("es", (ctx) => actions.changeLanguage(ctx, "es"));
 
 // comands
+bot.command(["protecc", "proteger", "proteccion", "protección"], (ctx) =>
+  commands.protecc(ctx)
+);
+
 // bot.command("span", async (ctx) => {
 //   // lanza una waifu para hacer pruebas
 //   if (ctx.chat.type != "group" && ctx.chat.type != "supergroup") return;
 //   await sendWaifu(ctx);
 // });
 
-bot.command("protecc", async (ctx) => {
-  // guarda a una waifu que este activa en el grupo
-  if (ctx.chat.type != "group" && ctx.chat.type != "supergroup") return;
-  // const { message } = ctx;
-  // const response = await axios.post("/waifus/protecc", { message });
-  // if (response.status == 200) {
-  //   ctx.reply(response.data.message, {
-  //     reply_to_message_id: message.message_id,
-  //   });
-  // }
-  return await addCountInChat(ctx);
-});
+// bot.command("protecc", async (ctx) => {
+//   // guarda a una waifu que este activa en el grupo
+//   if (ctx.chat.type != "group" && ctx.chat.type != "supergroup") return;
+//   // const { message } = ctx;
+//   // const response = await axios.post("/waifus/protecc", { message });
+//   // if (response.status == 200) {
+//   //   ctx.reply(response.data.message, {
+//   //     reply_to_message_id: message.message_id,
+//   //   });
+//   // }
+//   return await addCountInChat(ctx);
+// });
 
 // bot.command("list", async (ctx) => {
 //   // envia el listado de waifus que tengal el usuari que envio el correo
@@ -406,11 +401,11 @@ bot.hears(
 
 // on
 // ['text', 'sticker', 'image', 'audio', 'video', 'document']
-bot.on("message", async (ctx) => {
-  if (ctx.chat.type == "group" || ctx.chat.type == "supergroup")
-    await addCountInChat(ctx);
-  return;
-});
+// bot.on("message", async (ctx) => {
+//   if (ctx.chat.type == "group" || ctx.chat.type == "supergroup")
+//     await addCountInChat(ctx);
+//   return;
+// });
 
 // // functions
 async function addCountInChat(_) {
@@ -419,9 +414,11 @@ async function addCountInChat(_) {
   // return;
 }
 
-// async function sendWaifu(ctx) {
+// const sendWaifu = async (ctx) => {
 //   // busca y envia una waifu al chat
-//   // const { chat } = ctx;
+//   const { chat } = ctx;
+//   console.log(chat);
+
 //   // const response = await axios.get(`/waifus/send_waifu?chatId=${chat.id}`);
 
 //   // if (response.status == 200) {
@@ -437,7 +434,7 @@ async function addCountInChat(_) {
 //   //     }
 //   //   );
 //   // }
-// }
+// };
 
 // const waifusText = async (data): Promise<string[]> => {
 //   // formatea el mensaje del listado de las waifus
