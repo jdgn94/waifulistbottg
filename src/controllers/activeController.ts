@@ -69,7 +69,7 @@ const deleteWaifuActiveFromId = async (id: number, t: Transaction) => {
   }
 };
 
-const assingWaifu = async (chatIdTg: string, userIdTg: string) => {
+const assignWaifu = async (chatIdTg: string, userIdTg: string) => {
   const t = await db.sequelize.transaction();
   try {
     const active = await _getActiveData(chatIdTg);
@@ -96,5 +96,5 @@ export default {
   getWaifuActiveToChatIdTg,
   updateAttemptStatus,
   deleteWaifuActiveFromId,
-  assingWaifu,
+  assignWaifu,
 };

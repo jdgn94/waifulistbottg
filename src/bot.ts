@@ -46,7 +46,9 @@ bot.action("es", (ctx) => actions.changeLanguage(ctx, "es"));
 bot.command(["protecc", "proteger", "proteccion", "protección"], (ctx) =>
   commands.protecc(ctx)
 );
+bot.command(["language", "idioma"], (ctx) => commands.changeLanguage(ctx));
 
+// command testing
 bot.command("span", (ctx) => commands.span(ctx));
 
 // bot.command("span", async (ctx) => {

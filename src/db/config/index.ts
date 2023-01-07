@@ -1,16 +1,17 @@
 import dotenv from "dotenv";
-import { Sequelize } from "sequelize";
+import { Dialect, Sequelize } from "sequelize";
 
 process.env.NODE_ENV !== "production" && dotenv.config();
 
 const development = {
-  username: process.env.USERNAME || "root",
-  password: process.env.PASSWORD || "",
-  database: process.env.DATABASE || "dev",
-  host: process.env.HOST || "localhost",
-  port: process.env.PORT_DB || 3306,
+  username: process.env.USERNAME ?? "root",
+  password: process.env.PASSWORD ?? "",
+  database: process.env.DATABASE ?? "dev",
+  host: process.env.HOST ?? "localhost",
+  port: process.env.PORT_DB ?? 3306,
   seederStorage: "sequelize",
   seederStorageTableName: "SequelizeSeeds",
+  dialect: (process.env.DIALECT ?? "mysql") as Dialect,
   logging: true,
   timezone: "-04:00",
   dialectOptions: {
@@ -31,7 +32,7 @@ const db = new Sequelize(
   {
     host: development.host,
     port: Number(development.port),
-    dialect: "mysql",
+    dialect: development.dialect,
     timezone: development.timezone,
     pool: development.pool,
     dialectOptions: development.dialectOptions,

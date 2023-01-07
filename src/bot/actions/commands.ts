@@ -4,6 +4,7 @@ import i18n from "../../config/i18n";
 import menuButton from "../utils/menuButtons";
 import waifusController from "../../controllers/waifusController";
 import activeController from "../../controllers/activeController";
+import chatController from "../../controllers/chatController";
 import {
   chatIsGroup,
   createChantAndUser,
@@ -74,7 +75,7 @@ const protecc = async (ctx: Context) => {
       }
       await userController.getUserInfo(ctx);
 
-      const result = await activeController.assingWaifu(
+      const result = await activeController.assignWaifu(
         chat.id.toString(),
         ctx.message?.from.id.toString()
       );
@@ -98,6 +99,40 @@ const protecc = async (ctx: Context) => {
   }
 };
 
+const changeLanguage = async (ctx: Context) => {
+  try {
+    const { message, chat } = ctx;
+    if (!chat) throw "no chat found";
+    const chatId = chat.id.toString();
+    if (message && "text" in message) {
+      const text = message.text.split(" ");
+      let languageSelected: "en" | "es" = "en";
+      text.map((s) => {
+        if (s.toLowerCase() == "en") languageSelected = "en";
+        if (s.toLowerCase() == "es") languageSelected = "es";
+      });
+
+      const languageChanged = await chatController.changeLanguage(
+        chatId,
+        languageSelected
+      );
+
+      if (languageChanged == true) {
+        i18n.setLocale(languageSelected);
+        return ctx.reply(i18n.__("languageChanged"));
+      } else {
+        return ctx.reply(i18n.__("changeLanguageError"));
+      }
+    }
+    throw "unknown message";
+  } catch (error) {
+    global.logger.error(error);
+    ctx.reply(i18n.__("unexpectedError"));
+    throw error;
+  }
+};
+
+// testing
 const span = async (ctx: Context) => {
   await sendWaifu(ctx);
 };
@@ -105,5 +140,6 @@ const span = async (ctx: Context) => {
 export default {
   start,
   protecc,
+  changeLanguage,
   span,
 };

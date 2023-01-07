@@ -1,7 +1,7 @@
 import { Context } from "telegraf";
 
 import i18n from "../../config/i18n";
-import chats from "../../controllers/chatController";
+import chatController from "../../controllers/chatController";
 import menuButtons from "../utils/menuButtons";
 
 const changeLanguage = async (ctx: Context, language: "en" | "es") => {
@@ -9,7 +9,10 @@ const changeLanguage = async (ctx: Context, language: "en" | "es") => {
     const chatId = ctx.chat?.id.toString();
     if (!chatId) throw "no chat";
 
-    const languageChanged = await chats.changeLanguage(chatId, language);
+    const languageChanged = await chatController.changeLanguage(
+      chatId,
+      language
+    );
 
     if (!languageChanged) throw "no language changed";
 
