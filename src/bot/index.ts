@@ -1,11 +1,11 @@
 if (process.env.NODE_ENV == "development") require("dotenv").config();
 import { Telegraf } from "telegraf";
 
-import i18n from "./config/i18n";
-import commands from "./bot/actions/commands";
-import hears from "./bot/actions/hears";
-import actions from "./bot/actions/actions";
-import { getLanguage, addMessageCount } from "./bot/utils/generic";
+import i18n from "../config/i18n";
+import commands from "./actions/commands";
+import hears from "./actions/hears";
+import actions from "./actions/actions";
+import { getLanguage, addMessageCount } from "./utils/generic";
 
 const bot = new Telegraf(process.env.TOKEN_TG ?? ""); // poner el tocken en una variable de entorno
 

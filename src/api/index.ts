@@ -4,7 +4,7 @@ import morgan from "morgan";
 import multer from "multer";
 import path from "path";
 import uuid from "uuid";
-import { logger, stream } from "./config/winston";
+import { logger, stream } from "../config/winston";
 
 global.logger = logger;
 // const baseURL = '/api';
