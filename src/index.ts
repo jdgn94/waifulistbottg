@@ -11,7 +11,7 @@ const main = async (): Promise<void> => {
     global.logger.info(`server on port ${port}`);
     db.sequelize.authenticate();
     global.logger.info(`database connected`);
-    await db.sequelize.sync({ force: false, alter: false });
+    // await db.sequelize.sync({ force: false, alter: false });
     global.logger.info(`database sync`);
     bot.launch();
     global.logger.info(`bot launch`);

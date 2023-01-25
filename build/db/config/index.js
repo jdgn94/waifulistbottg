@@ -19,10 +19,10 @@ const development = {
     logging: process.env.NODE_ENV == "development",
     timezone: "-04:00",
     dialectOptions: {
-        connectTimeout: 60000,
+        connectTimeout: 540000,
     },
     pool: {
-        max: 10,
+        max: 5,
         min: 0,
         idle: 20000,
         acquire: 20000,
